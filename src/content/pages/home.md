@@ -22,7 +22,7 @@ hero:
 
 highlights:
   tagline: '[Why it matters]'
-  title: '[The three things that make this different]'
+  title: '[Impacts to Highlight]'
   items:
     - title: '[First differentiator]'
       description: '[One or two sentences. Concrete beats sweeping — a modality, a target class, a measured result.]'
