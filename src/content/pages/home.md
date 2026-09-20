@@ -12,10 +12,10 @@ description: '[Search-engine description, roughly 155 characters: what the compa
 
 hero:
   # badge: '[Preclinical stage]'
-  title: 'Transforming RNA Science into Breakthrough Therapies'
-  subtitle: '[Two sentences of support. What the platform does, what it makes possible, and who it is for. Avoid jargon a non-specialist could not follow.]'
+  title: 'Breakthrough therapies <br> with RNA science'
+  subtitle: 'Selective, reversible, and personalized:<br>A new type of medicine to transform the lives of people with genetic disorders.<br><br>'
   actions:
-    - { text: Explore the platform, href: /platform, variant: primary, icon: 'tabler:arrow-right' }
+    - { text: Our platform, href: /platform, variant: primary, icon: 'tabler:arrow-right' }
     - { text: Get in touch, href: '/careers#contact' }
   # Optional hero image. Drop a file in src/assets/images/ and uncomment:
   # image: { src: '~/assets/images/hero.jpg', alt: '[Describe the image]' }
@@ -35,8 +35,8 @@ highlights:
       icon: 'tabler:chart-dots'
 
 approach:
-  tagline: '[Our approach]'
-  title: '[How the science works, in plain language]'
+  # tagline: '[Our approach]'
+  title: 'Cutting-edge Genomics & AI '
   content: '[A short paragraph setting up the checklist below. This is the place to say what problem the field has been stuck on and what the company does about it.]'
   items:
     - title: '[Step or principle]'
@@ -46,19 +46,11 @@ approach:
     - title: '[Step or principle]'
       description: '[What it means in practice.]'
   # Optional image beside the text:
-  # image: { src: '~/assets/images/lab.jpg', alt: '[Describe the image]' }
-
-# Numbers strip. Delete this whole `stats:` block to remove the section.
-stats:
-  items:
-    - { amount: '[N]', title: '[Programs in development]' }
-    - { amount: '[N]', title: '[Peer-reviewed papers]' }
-    - { amount: '[$N M]', title: '[Raised to date]' }
-    - { amount: '[N]', title: '[Team members]' }
+  image: { src: '~/assets/images/stock-image.jpg', alt: 'Stock photo' }
 
 cta:
-  title: '[Closing invitation — e.g. "Interested in working together?"]'
-  subtitle: '[One line on who should reach out: partners, investors, scientists.]'
+  title: 'Interested in working together?'
+  subtitle: 'Get in touch to explore partnership opportunities with us.'
   actions:
     - { text: Contact us, href: '/careers#contact', variant: primary }
 ---

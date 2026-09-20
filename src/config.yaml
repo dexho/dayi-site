@@ -6,7 +6,7 @@
 # contact details — lives in `src/content/`. See CONTENT.md.
 
 site:
-  name: Dayi
+  name: Dayi Tx
   site: 'https://example.com' # [REPLACE] production URL, no trailing slash
   base: '/'
   trailingSlash: false
@@ -15,14 +15,14 @@ site:
 # markdown file (`title:` and `description:` in the frontmatter).
 metadata:
   title:
-    default: Dayi
+    default: Dayi Tx
     template: '%s — Dayi'
   description: '[REPLACE] One sentence describing what the company does.'
   robots:
     index: true
     follow: true
   openGraph:
-    site_name: Dayi
+    site_name: Dayi Tx
     images:
       - url: '~/assets/images/default.png' # [REPLACE] 1200×628 social sharing image
         width: 1200
@@ -34,4 +34,4 @@ i18n:
   textDirection: ltr
 
 ui:
-  theme: 'system' # Values: "system" | "light" | "dark" | "light:only" | "dark:only"
+  theme: 'light:only' # Values: "system" | "light" | "dark" | "light:only" | "dark:only"

@@ -44,7 +44,11 @@ const structuredData = [
     subtitle={await md(hero.subtitle)}
     actions={hero.actions}
     image={hero.image}
-  />
+  >
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-primary/5"></div>
+    </Fragment>
+  </Hero>
 
   {
     highlights && (

@@ -32,7 +32,7 @@ footer:
   socials:
     - { icon: 'tabler:brand-linkedin', href: 'https://www.linkedin.com/company/example', ariaLabel: LinkedIn }
     - { icon: 'tabler:brand-x', href: 'https://x.com/example', ariaLabel: X }
-  note: '© 2026 [Company Name]. All rights reserved.'
+  note: '© 2026 Dayi Therapeutics. All rights reserved.'
 
 # Used by the contact block on the careers page and by every "email us" button.
 contact:

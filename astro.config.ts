@@ -28,7 +28,7 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.fontsource(),
-      name: 'Inter',
+      name: 'Lexend',
       cssVariable: '--font-inter',
       weights: ['100 900'],
       styles: ['normal'],

@@ -12,8 +12,8 @@ description: '[Search-engine description of the technology, roughly 155 characte
 
 hero:
   badge: '[Technology]'
-  title: '[Name of the platform] — [what it does in six words]'
-  subtitle: '[Two or three sentences for a scientifically literate reader: the modality, the biology it acts on, and why the approach is tractable now.]'
+  title: '[Name of the platform]'
+  subtitle: '[Two or three sentences for a scientifically literate reader: the modality, the biology it acts on, and why the approach is tractable now.]<br><br>'
   actions:
     - { text: See the science, href: '#details', variant: primary }
 
@@ -60,18 +60,18 @@ process:
   # Optional image beside the steps:
   # image: { src: '~/assets/images/process.jpg', alt: '[Describe the image]' }
 
-details:
-  title: '[The science in more detail]'
-  subtitle: '[One line for readers who want the mechanism, not the summary.]'
+# details:
+#   title: '[The science in more detail]'
+#   subtitle: '[One line for readers who want the mechanism, not the summary.]'
 
-cta:
-  title: '[Want the full picture?]'
-  subtitle: '[Offer a deck, a data package or a conversation.]'
-  actions:
-    - { text: Request more information, href: '/careers#contact', variant: primary }
+# cta:
+#   title: '[Want the full picture?]'
+#   subtitle: '[Offer a deck, a data package or a conversation.]'
+#   actions:
+#     - { text: Request more information, href: '/careers#contact', variant: primary }
 ---
 
-## [Section heading — e.g. the biological problem]
+<!-- ## [Section heading — e.g. the biological problem]
 
 [A few paragraphs written the way you would explain the work to a colleague in
 a neighbouring field. This body is ordinary markdown, so use whatever structure
@@ -94,4 +94,4 @@ Be careful to keep forward-looking claims defensible.]
 > version of the thesis.]
 
 [Publications and preprints can be linked like this:
-[Author et al., 2026](https://example.com/paper).]
+[Author et al., 2026](https://example.com/paper).] -->
