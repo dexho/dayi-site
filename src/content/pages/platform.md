@@ -11,11 +11,11 @@ title: Platform
 description: '[Search-engine description of the technology, roughly 155 characters.]'
 
 hero:
-  badge: '[Technology]'
+  # badge: '[Technology]'
   title: '[Name of the platform]'
   subtitle: '[Two or three sentences for a scientifically literate reader: the modality, the biology it acts on, and why the approach is tractable now.]<br><br>'
-  actions:
-    - { text: See the science, href: '#details', variant: primary }
+  # actions:
+  #   - { text: See the science, href: '#details', variant: primary }
 
 pillars:
   tagline: '[Platform]'

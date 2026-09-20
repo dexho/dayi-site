@@ -73,7 +73,20 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme 
           </div>
         ))
       }
+      <div
+        class="col-span-12 md:col-span-6 lg:col-span-4 md:text-right text-xs italic leading-relaxed text-muted dark:text-gray-400"
+      >
+        <p>
+          Once upon a time<br />
+          There were ten suns<br />
+          Scorching the land<br />
+          DaYi, the Lord Archer<br />
+          Shot down nine<br />
+          One by one
+        </p>
+      </div>
     </div>
+
     <div class="md:flex md:items-center md:justify-between py-6 md:py-8">
       {
         socialLinks?.length ? (
@@ -100,5 +113,6 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme 
         <Fragment set:html={footNote} />
       </div>
     </div>
+
   </div>
 </footer>

@@ -18,9 +18,9 @@ description: '[Search-engine description: who you are hiring and how to reach th
 hero:
   title: '[Come build it with us]'
   subtitle: '[Two sentences on the stage of the company, the size of the team, and what someone joining now would own.]'
-  actions:
-    - { text: See open roles, href: '#openings', variant: primary }
-    - { text: Contact us, href: '#contact' }
+  # actions:
+  #   - { text: See open roles, href: '#openings', variant: primary }
+  #   - { text: Contact us, href: '#contact' }
 
 benefits:
   tagline: '[Working here]'

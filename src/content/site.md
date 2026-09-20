@@ -13,8 +13,8 @@ nav:
     - { text: Platform, href: /platform }
     - { text: Team, href: /team }
     - { text: Careers, href: /careers }
-  actions:
-    - { text: Contact us, href: '/careers#contact', variant: primary }
+  # Header buttons. Add e.g. { text: Contact us, href: '/careers#contact', variant: primary }
+  actions: []
 
 footer:
   columns:
