@@ -1,9 +1,13 @@
 ---
+import { Image } from 'astro:assets';
 import { SITE } from 'astrowind:config';
+
+// Swap the file below to change the logo; the site name comes from
+// `site.name` in src/config.yaml.
+import logo from '~/assets/images/dayi_logo_logo.png';
 ---
 
-<span
-  class="self-center ml-2 rtl:ml-0 rtl:mr-2 text-2xl md:text-xl font-bold text-gray-900 whitespace-nowrap dark:text-white"
->
-  🚀 {SITE?.name}
+<span class="flex items-center gap-2 self-center whitespace-nowrap">
+  <Image src={logo} alt="" width={32} height={32} layout="fixed" class="h-8 w-8 object-contain" loading="eager" />
+  <span class="text-2xl font-bold tracking-tight text-gray-900 md:text-xl dark:text-white">{SITE?.name}</span>
 </span>

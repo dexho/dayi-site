@@ -1,0 +1,26 @@
+---
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+import Headline from '~/components/ui/Headline.astro';
+import type { Widget } from '~/types';
+
+// Renders the markdown body of a content file as styled prose.
+// Used for the free-form sections of the platform, team and careers pages.
+
+interface Props extends Widget {
+  title?: string;
+  subtitle?: string;
+  tagline?: string;
+}
+
+const { title, subtitle, tagline, id, isDark = false, classes = {}, bg } = Astro.props;
+---
+
+<WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-4xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
+  <Headline title={title} subtitle={subtitle} tagline={tagline} classes={classes?.headline as Record<string, string>} />
+
+  <div
+    class="prose prose-lg mx-auto max-w-4xl prose-headings:font-heading prose-headings:font-bold prose-headings:tracking-tighter prose-a:text-primary prose-img:rounded-md prose-img:shadow-lg dark:prose-invert dark:prose-headings:text-slate-300 dark:prose-a:text-blue-400"
+  >
+    <slot />
+  </div>
+</WidgetWrapper>

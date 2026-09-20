@@ -1,0 +1,65 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+import Hero from '~/components/widgets/Hero.astro';
+import Team from '~/components/widgets/Team.astro';
+import CallToAction from '~/components/widgets/CallToAction.astro';
+import Prose from '~/components/ui/Prose.astro';
+
+import { getContent } from '~/utils/content';
+import { md, mdInline } from '~/utils/markdown';
+import { render } from 'astro:content';
+
+// All copy lives in src/content/pages/team.md — add a person there.
+const page = await getContent('team');
+const { title, description, hero, groups, cta } = page.data;
+const { Content: Body } = await render(page);
+const hasBody = Boolean(page.body?.trim());
+
+// Bios accept markdown, so render each member's before handing the group to
+// the widget (it prints them with `set:html`).
+const renderedGroups = await Promise.all(
+  groups.map(async (group) => ({
+    ...group,
+    tagline: await mdInline(group.tagline),
+    title: await mdInline(group.title),
+    subtitle: await md(group.subtitle),
+    members: await Promise.all(group.members.map(async (member) => ({ ...member, bio: await md(member.bio) }))),
+  }))
+);
+---
+
+<Layout metadata={{ title, description }}>
+  <Hero
+    badge={hero.badge}
+    tagline={await mdInline(hero.tagline)}
+    title={await mdInline(hero.title)}
+    subtitle={await md(hero.subtitle)}
+    actions={hero.actions}
+    image={hero.image}
+  />
+
+  {
+    hasBody && (
+      <Prose classes={{ container: 'pt-0 md:pt-0 lg:pt-0' }}>
+        <Body />
+      </Prose>
+    )
+  }
+
+  {
+    renderedGroups.map((group, index) => (
+      <Team
+        id={index === 0 ? 'people' : undefined}
+        tagline={group.tagline}
+        title={group.title}
+        subtitle={group.subtitle}
+        columns={group.columns}
+        members={group.members}
+        classes={index % 2 === 1 ? { container: 'pt-0 md:pt-0 lg:pt-0' } : {}}
+      />
+    ))
+  }
+
+  {cta && <CallToAction title={await mdInline(cta.title)} subtitle={await md(cta.subtitle)} actions={cta.actions} />}
+</Layout>

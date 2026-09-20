@@ -1,0 +1,83 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+import Hero from '~/components/widgets/Hero.astro';
+import Features2 from '~/components/widgets/Features2.astro';
+import Steps from '~/components/widgets/Steps.astro';
+import CallToAction from '~/components/widgets/CallToAction.astro';
+import Prose from '~/components/ui/Prose.astro';
+
+import { getContent } from '~/utils/content';
+import { md, mdInline, mdItems } from '~/utils/markdown';
+import { render } from 'astro:content';
+
+// All copy lives in src/content/pages/platform.md.
+const page = await getContent('platform');
+const { title, description, hero, pillars, process, details, cta } = page.data;
+const { Content: Body } = await render(page);
+const hasBody = Boolean(page.body?.trim());
+---
+
+<Layout metadata={{ title, description }}>
+  <Hero
+    badge={hero.badge}
+    tagline={await mdInline(hero.tagline)}
+    title={await mdInline(hero.title)}
+    subtitle={await md(hero.subtitle)}
+    actions={hero.actions}
+    image={hero.image}
+  />
+
+  {
+    pillars && (
+      <Features2
+        id="pillars"
+        columns={3}
+        tagline={await mdInline(pillars.tagline)}
+        title={await mdInline(pillars.title)}
+        subtitle={await md(pillars.subtitle)}
+        items={await mdItems(pillars.items)}
+      >
+        <Fragment slot="bg">
+          <div class="absolute inset-0 bg-primary/5 dark:bg-transparent" />
+        </Fragment>
+      </Features2>
+    )
+  }
+
+  {
+    process && (
+      <Steps
+        id="process"
+        tagline={await mdInline(process.tagline)}
+        title={await mdInline(process.title)}
+        subtitle={await md(process.subtitle)}
+        items={await mdItems(process.items)}
+        image={process.image}
+      />
+    )
+  }
+
+  {
+    hasBody && (
+      <Prose
+        id="details"
+        tagline={await mdInline(details?.tagline)}
+        title={await mdInline(details?.title)}
+        subtitle={await md(details?.subtitle)}
+      >
+        <Body />
+      </Prose>
+    )
+  }
+
+  {
+    cta && (
+      <CallToAction
+        title={await mdInline(cta.title)}
+        subtitle={await md(cta.subtitle)}
+        actions={cta.actions}
+      />
+    )
+  }
+</Layout>

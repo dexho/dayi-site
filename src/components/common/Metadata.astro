@@ -64,7 +64,6 @@ function buildOpenGraph(og: MetaDataOpenGraph): SEOProps['openGraph'] | undefine
       height: firstImage?.height,
       alt: title || METADATA?.title?.default || '',
     },
-    ...(og.type === 'article' && og.article ? { article: og.article } : {}),
   };
 }
 

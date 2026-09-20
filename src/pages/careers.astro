@@ -1,0 +1,165 @@
+---
+import { Icon } from 'astro-icon/components';
+
+import Layout from '~/layouts/PageLayout.astro';
+
+import Hero from '~/components/widgets/Hero.astro';
+import Features from '~/components/widgets/Features.astro';
+import Prose from '~/components/ui/Prose.astro';
+import Button from '~/components/ui/Button.astro';
+import Headline from '~/components/ui/Headline.astro';
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+
+import { getContent } from '~/utils/content';
+import { md, mdInline, mdItems } from '~/utils/markdown';
+import { render } from 'astro:content';
+
+// Copy lives in src/content/pages/careers.md; the addresses below come from
+// src/content/site.md so they are only written once.
+const page = await getContent('careers');
+const { title, description, hero, benefits, openings, contact } = page.data;
+const { Content: Body } = await render(page);
+const hasBody = Boolean(page.body?.trim());
+
+const site = await getContent('site');
+const { email, jobsEmail, phone, address } = site.data.contact;
+
+const roles = await Promise.all(
+  (openings?.items ?? []).map(async (role) => ({
+    ...role,
+    description: await md(role.description),
+    mailto: `mailto:${role.applyEmail ?? jobsEmail}?subject=${encodeURIComponent(`Application: ${role.title}`)}`,
+  }))
+);
+---
+
+<Layout metadata={{ title, description }}>
+  <Hero
+    badge={hero.badge}
+    tagline={await mdInline(hero.tagline)}
+    title={await mdInline(hero.title)}
+    subtitle={await md(hero.subtitle)}
+    actions={hero.actions}
+    image={hero.image}
+  />
+
+  {
+    hasBody && (
+      <Prose classes={{ container: 'pt-0 md:pt-0 lg:pt-0' }}>
+        <Body />
+      </Prose>
+    )
+  }
+
+  {
+    benefits && (
+      <Features
+        id="benefits"
+        columns={2}
+        tagline={await mdInline(benefits.tagline)}
+        title={await mdInline(benefits.title)}
+        subtitle={await md(benefits.subtitle)}
+        items={await mdItems(benefits.items)}
+      >
+        <Fragment slot="bg">
+          <div class="absolute inset-0 bg-primary/5 dark:bg-transparent" />
+        </Fragment>
+      </Features>
+    )
+  }
+
+  <!-- Open roles: one expandable entry per opening in careers.md -->
+  {
+    openings && (
+      <WidgetWrapper id="openings" containerClass="max-w-4xl mx-auto">
+        <Headline
+          tagline={await mdInline(openings.tagline)}
+          title={await mdInline(openings.title)}
+          subtitle={await md(openings.subtitle)}
+        />
+
+        {roles.length > 0 ? (
+          <ul class="list-none space-y-4">
+            {roles.map((role) => (
+              <li>
+                <details
+                  name="openings"
+                  class="group rounded-lg border border-gray-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900"
+                >
+                  <summary class="flex cursor-pointer items-start justify-between gap-4 list-none">
+                    <div>
+                      <h3 class="text-lg font-bold text-heading">{role.title}</h3>
+                      {(role.location || role.type) && (
+                        <p class="mt-1 text-sm text-muted">
+                          {[role.location, role.type].filter(Boolean).join(' · ')}
+                        </p>
+                      )}
+                    </div>
+                    <Icon
+                      name="tabler:chevron-down"
+                      class="mt-1 h-5 w-5 shrink-0 text-muted transition-transform group-open:rotate-180"
+                    />
+                  </summary>
+
+                  {role.description && (
+                    <div
+                      class="prose prose-sm mt-4 max-w-none border-t border-gray-100 pt-4 prose-a:text-primary dark:prose-invert dark:border-slate-700"
+                      set:html={role.description}
+                    />
+                  )}
+
+                  <div class="mt-5">
+                    <Button variant="primary" href={role.mailto} text="Apply for this role" icon="tabler:mail" />
+                  </div>
+                </details>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="mx-auto max-w-2xl text-center text-muted" set:html={await md(openings.emptyMessage)} />
+        )}
+      </WidgetWrapper>
+    )
+  }
+
+  <!-- Contact: addresses come from src/content/site.md -->
+  <WidgetWrapper id="contact" containerClass="max-w-4xl mx-auto">
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-primary/5 dark:bg-transparent"></div>
+    </Fragment>
+
+    <Headline
+      tagline={await mdInline(contact?.tagline)}
+      title={await mdInline(contact?.title)}
+      subtitle={await md(contact?.subtitle)}
+    />
+
+    <div class="mx-auto flex max-w-md flex-col items-center gap-4 sm:flex-row sm:justify-center">
+      <Button variant="primary" href={`mailto:${email}`} text={email} icon="tabler:mail" class="w-full sm:w-auto" />
+      <Button href={`mailto:${jobsEmail}`} text={jobsEmail} icon="tabler:briefcase" class="w-full sm:w-auto" />
+    </div>
+
+    {
+      (phone || address) && (
+        <dl class="mx-auto mt-10 grid max-w-2xl gap-8 text-center sm:grid-cols-2 sm:text-left">
+          {phone && (
+            <div>
+              <dt class="text-sm font-semibold tracking-wide text-heading uppercase">Phone</dt>
+              <dd class="mt-1 text-muted">
+                <a class="hover:text-primary hover:underline" href={`tel:${phone.replace(/[^+\d]/g, '')}`}>
+                  {phone}
+                </a>
+              </dd>
+            </div>
+          )}
+          {address && (
+            <div>
+              <dt class="text-sm font-semibold tracking-wide text-heading uppercase">Address</dt>
+              <dd class="mt-1 whitespace-pre-line text-muted">{address.trim()}</dd>
+            </div>
+          )}
+        </dl>
+      )
+    }
+  </WidgetWrapper>
+</Layout>
