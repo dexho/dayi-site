@@ -2,12 +2,23 @@
 import { Image } from 'astro:assets';
 import { SITE } from 'astrowind:config';
 
-// Swap the file below to change the logo; the site name comes from
-// `site.name` in src/config.yaml.
-import logo from '~/assets/images/dayi_logo_logo.png';
+// Swap the file below to change the logo. It already includes the company
+// name as artwork, so no text is rendered beside it.
+import logo from '~/assets/images/dayi_logo_logo-with-text.png';
+
+// Render the whole PNG at its natural aspect ratio, sized by height.
+const logoHeight = 68;
+const logoWidth = Math.round((logo.width / logo.height) * logoHeight);
 ---
 
-<span class="flex items-center gap-2 self-center whitespace-nowrap">
-  <Image src={logo} alt="" width={56} height={56} layout="fixed" class="h-14 w-14 object-contain" loading="eager" />
-  <span class="text-3xl font-bold tracking-tight text-gray-900 md:text-2xl dark:text-white">{SITE?.name}</span>
+<span class="flex items-center self-center whitespace-nowrap">
+  <Image
+    src={logo}
+    alt={SITE?.name}
+    width={logoWidth}
+    height={logoHeight}
+    layout="fixed"
+    class="h-17 w-auto object-contain"
+    loading="eager"
+  />
 </span>

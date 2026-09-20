@@ -25,7 +25,8 @@ const withPermalink = <T extends { href: string }>(entries: T[]) =>
 
 <Layout metadata={metadata}>
   <slot name="head" slot="head" />
-  <Header links={withPermalink(nav.links)} actions={withPermalink(nav.actions)} isSticky showToggleTheme />
+  <!-- No showToggleTheme: the site is light-mode only (see `ui.theme` in src/config.yaml). -->
+  <Header links={withPermalink(nav.links)} actions={withPermalink(nav.actions)} isSticky />
   <main class="flex-1">
     <slot />
   </main>

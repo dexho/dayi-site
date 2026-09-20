@@ -46,7 +46,8 @@ const structuredData = [
     image={hero.image}
   >
     <Fragment slot="bg">
-      <div class="absolute inset-0 bg-primary/5"></div>
+      <!-- Extends up behind the header (which isn't pulled over on mobile) so the tint starts at the very top. -->
+      <div class="absolute inset-x-0 bottom-0 -top-[93px] md:top-0 bg-primary/5"></div>
     </Fragment>
   </Hero>
 
