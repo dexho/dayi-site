@@ -109,6 +109,8 @@ export interface Hero extends Omit<Headline, 'classes'>, Omit<Widget, 'isDark' |
   content?: string;
   actions?: string | CallToAction[];
   image?: string | HeroImage;
+  /** Stretch the section to fill the viewport and centre the content in it. */
+  fullHeight?: boolean;
 }
 
 export interface Features extends Omit<Headline, 'classes'>, Widget {

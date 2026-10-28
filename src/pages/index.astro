@@ -7,10 +7,12 @@ import Content from '~/components/widgets/Content.astro';
 import Stats from '~/components/widgets/Stats.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 import StructuredData from '~/components/common/StructuredData.astro';
+import Image from '~/components/common/Image.astro';
 import Prose from '~/components/ui/Prose.astro';
 
 import { SITE } from 'astrowind:config';
 import { getContent } from '~/utils/content';
+import { findImage } from '~/utils/images';
 import { md, mdInline, mdItems } from '~/utils/markdown';
 import { render } from 'astro:content';
 import favIconSvg from '~/assets/favicons/favicon.svg';
@@ -18,6 +20,16 @@ import favIconSvg from '~/assets/favicons/favicon.svg';
 // All copy lives in src/content/pages/home.md — nothing on this page is hardcoded.
 const page = await getContent('home');
 const { title, description, hero, highlights, approach, stats, cta } = page.data;
+// Hero backdrop (set in home.md as `hero.backdrop`). Resolved here so the srcset
+// fits whatever artwork is dropped in: variants wider than the file itself would
+// only upscale it, so the file's own width caps the list.
+const BACKDROP_WIDTHS = [640, 960, 1280, 1920, 2560];
+const backdrop = hero.backdrop ? await findImage(hero.backdrop.src) : null;
+const backdropWidth = backdrop && typeof backdrop === 'object' ? backdrop.width : undefined;
+const backdropWidths = backdropWidth
+  ? [...BACKDROP_WIDTHS.filter((w) => w < backdropWidth), backdropWidth]
+  : BACKDROP_WIDTHS;
+
 const { Content: Body } = await render(page);
 const hasBody = Boolean(page.body?.trim());
 
@@ -38,6 +50,7 @@ const structuredData = [
   <StructuredData slot="head" schema={structuredData} />
 
   <Hero
+    fullHeight
     badge={hero.badge}
     tagline={await mdInline(hero.tagline)}
     title={await mdInline(hero.title)}
@@ -46,68 +59,121 @@ const structuredData = [
     image={hero.image}
   >
     <Fragment slot="bg">
-      <!-- Extends up behind the header (which isn't pulled over on mobile) so the tint starts at the very top. -->
-      <div class="absolute inset-x-0 bottom-0 -top-[93px] md:top-0 bg-primary/5"></div>
+      <!-- Extends up behind the header (which isn't pulled over on mobile) so the fill starts at the very top. -->
+      <div class="hero-sand absolute inset-x-0 bottom-0 -top-[93px] md:top-0">
+        {
+          backdrop && (
+            <div class="hero-backdrop-window absolute inset-0">
+              <Image
+                src={backdrop}
+                alt={hero.backdrop?.alt ?? ''}
+                class="hero-backdrop fixed inset-x-0 bottom-0 h-auto max-h-[60dvh] object-cover object-bottom"
+                widths={backdropWidths}
+                sizes="100vw"
+                format="webp"
+                layout="none"
+                loading="eager"
+                fetchpriority="high"
+              />
+            </div>
+          )
+        }
+      </div>
     </Fragment>
   </Hero>
 
-  {
-    highlights && (
-      <Features
-        id="highlights"
-        columns={3}
-        tagline={await mdInline(highlights.tagline)}
-        title={await mdInline(highlights.title)}
-        subtitle={await md(highlights.subtitle)}
-        items={await mdItems(highlights.items)}
-      />
-    )
-  }
+  <!-- Opaque surface for everything below the hero: the backdrop is pinned to the
+       viewport, so the sections scrolling over it need a background of their own to
+       hide it. `relative` matters as much as the colour — a static block paints below
+       positioned elements, and the pinned artwork is one. -->
+  <div class="relative bg-page">
+    {
+      highlights && (
+        <Features
+          id="highlights"
+          columns={3}
+          tagline={await mdInline(highlights.tagline)}
+          title={await mdInline(highlights.title)}
+          subtitle={await md(highlights.subtitle)}
+          items={await mdItems(highlights.items)}
+        />
+      )
+    }
 
-  {
-    approach && (
-      <Content
-        isReversed
-        tagline={await mdInline(approach.tagline)}
-        title={await mdInline(approach.title)}
-        subtitle={await md(approach.subtitle)}
-        content={await md(approach.content)}
-        items={await mdItems(approach.items)}
-        image={approach.image}
-      >
-        <Fragment slot="bg">
-          <div class="absolute inset-0 bg-primary/5 dark:bg-transparent"></div>
-        </Fragment>
-      </Content>
-    )
-  }
+    {
+      approach && (
+        <Content
+          isReversed
+          tagline={await mdInline(approach.tagline)}
+          title={await mdInline(approach.title)}
+          subtitle={await md(approach.subtitle)}
+          content={await md(approach.content)}
+          items={await mdItems(approach.items)}
+          image={approach.image}
+        >
+          <Fragment slot="bg">
+            <div class="absolute inset-0 bg-primary/5 dark:bg-transparent" />
+          </Fragment>
+        </Content>
+      )
+    }
 
-  {
-    stats && (
-      <Stats
-        countUp
-        title={await mdInline(stats.title)}
-        subtitle={await md(stats.subtitle)}
-        stats={stats.items}
-      />
-    )
-  }
+    {
+      stats && (
+        <Stats countUp title={await mdInline(stats.title)} subtitle={await md(stats.subtitle)} stats={stats.items} />
+      )
+    }
 
-  {
-    hasBody && (
-      <Prose>
-        <Body />
-      </Prose>
-    )
-  }
+    {
+      hasBody && (
+        <Prose>
+          <Body />
+        </Prose>
+      )
+    }
 
-  {
-    cta && (
-      <CallToAction
-        title={await mdInline(cta.title)}
-        subtitle={await md(cta.subtitle)}
-        actions={cta.actions}
-      />
-    )
-  }
+    {cta && <CallToAction title={await mdInline(cta.title)} subtitle={await md(cta.subtitle)} actions={cta.actions} />}
+  </div>
 </Layout>
+
+<style>
+  /* The artwork's own sky doubles as the section's fill, so the area behind the
+     band reads as more of the same picture rather than a block behind it, and it
+     lifts to the page's white at the top of the window. Repoint --hero-sand at the
+     replacement artwork's sky colour when the image in home.md changes.
+
+     The sand is fully in by 35%, which clears any artwork: the band is capped at
+     60dvh, so its top edge can never rise above 40% of the section. The flat
+     colour underneath is the fallback if the gradient can't be painted. */
+  .hero-sand {
+    --hero-sand: #e0dbcf;
+
+    background-color: var(--hero-sand);
+    background-image: linear-gradient(to bottom, var(--aw-color-bg-page), var(--hero-sand) 35%);
+  }
+
+  /* The artwork is pinned to the viewport, so the page slides over it as you
+     scroll. `clip` is deprecated but used deliberately: alone among the clipping
+     properties it confines a position:fixed descendant without becoming its
+     containing block, so the band stays stuck to the viewport yet still ends at
+     this section — `overflow` doesn't clip fixed children at all, and `clip-path`
+     would make the band scroll with the section again. */
+  .hero-backdrop-window {
+    clip: rect(0, auto, auto, 0);
+  }
+
+  /* The relative motion between the pinned artwork and the page is the effect
+     itself, so drop back to a plain bottom-aligned band when motion is unwelcome. */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-backdrop {
+      position: absolute;
+    }
+  }
+
+  /* Dissolve the band's top edge into the fill. Wide landscape art tends to clip
+     a peak or two flat against its top edge; the fade hides that seam, and being
+     a percentage it holds up at any resolution or aspect ratio. */
+  .hero-backdrop {
+    mask-image: linear-gradient(to bottom, transparent, #000 10%);
+  }
+</style>

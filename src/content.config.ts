@@ -73,6 +73,8 @@ const hero = z.object({
   badge: z.string().optional(),
   ...headline,
   image: image.optional(),
+  /** Full-bleed illustration behind the hero, aligned to its bottom edge. */
+  backdrop: image.optional(),
   actions: z.array(action).default([]),
 });
 

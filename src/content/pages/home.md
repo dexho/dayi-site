@@ -7,7 +7,7 @@
 # Any text field accepts markdown: **bold**, *italic*, [links](/platform).
 # ---------------------------------------------------------------------------
 
-title: '[Company Name] — [one-line positioning, e.g. "Programmable medicines for hard-to-treat disease"]'
+title: 'Dayi Therapeutics'
 description: '[Search-engine description, roughly 155 characters: what the company does, for which diseases, at what stage.]'
 
 hero:
@@ -19,6 +19,12 @@ hero:
     - { text: Get in touch, href: '/careers#contact' }
   # Optional hero image. Drop a file in src/assets/images/ and uncomment:
   # image: { src: '~/assets/images/hero.jpg', alt: '[Describe the image]' }
+
+  # Full-bleed illustration behind this section, sitting on its bottom edge.
+  # Any wide landscape image works — roughly 3:1 reads best, and the exact
+  # resolution doesn't matter. After swapping the file, match `--hero-sand`
+  # in src/pages/index.astro to the new artwork's sky colour.
+  backdrop: { src: '~/assets/images/prototype_background.png', alt: '' }
 
 highlights:
   tagline: '[Why it matters]'
