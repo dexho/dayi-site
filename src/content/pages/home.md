@@ -13,8 +13,9 @@ description: '[Search-engine description, roughly 155 characters: what the compa
 hero:
   # badge: '[Preclinical stage]'
   title: 'Breakthrough therapies <br> with RNA science'
-  subtitle: 'Selective, reversible, and personalized:<br>A new type of medicine to transform the lives of people with genetic disorders.'
-  # Button near the bottom of the hero that scrolls down to the next section.
+  subtitle: 'Selective, reversible, and personalized:<br>A new story for genetic disorders.'
+  # Wavy arrow near the bottom of the hero scrolls down to the next section;
+  # this is its label for screen readers.
   scrollCue: 'Our platform'
   # Optional hero image. Drop a file in src/assets/images/ and uncomment:
   # image: { src: '~/assets/images/hero.jpg', alt: '[Describe the image]' }
@@ -28,7 +29,7 @@ hero:
 # Mission statement, centred in its own band right below the hero.
 mission:
   tagline: 'Our mission'
-  text: 'We develop therapies for genetic diseases that carry a lifelong burden and have no effective treatment options today.'
+  text: 'We develop therapies for genetic diseases which carry a lifelong burden and have no effective treatment options today.'
 
 approach:
   # tagline: '[Our approach]'

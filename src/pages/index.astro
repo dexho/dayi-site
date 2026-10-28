@@ -8,7 +8,6 @@ import CallToAction from '~/components/widgets/CallToAction.astro';
 import StructuredData from '~/components/common/StructuredData.astro';
 import Image from '~/components/common/Image.astro';
 import Prose from '~/components/ui/Prose.astro';
-import Button from '~/components/ui/Button.astro';
 
 import { SITE } from 'astrowind:config';
 import { getContent } from '~/utils/content';
@@ -62,14 +61,41 @@ const structuredData = [
   >
     {
       hero.scrollCue && mission && (
-        <Fragment slot="bottom">
-          <Button
-            variant="primary"
+        <Fragment slot="overlay">
+          <!-- The bottom quarter of the splash is a big invisible version of the arrow:
+               clicking anywhere in it scrolls to the mission too. Hidden from keyboard
+               and screen readers, which already have the arrow link. -->
+          <a
             href="#mission"
-            text={hero.scrollCue}
-            icon="tabler:arrow-down"
-            class="rounded-none"
-          />
+            class="absolute inset-x-0 bottom-0 h-1/4 cursor-pointer"
+            tabindex="-1"
+            aria-hidden="true"></a>
+        </Fragment>
+      )
+    }
+    {
+      hero.scrollCue && mission && (
+        <Fragment slot="cue">
+          <!-- Wavy down-arrow, drawn in pixels. It sits right under the subtitle (see
+               the "cue" slot in Hero.astro); its first 240px are a straight line that
+               the -240px top margin pulls back up behind the subtitle box; another
+               16px of straight line shows below the box before the three peaks.
+               Hero.astro trims whatever reaches above the title. A brighter segment
+               flows down the whole length on a loop. Keep the margin in .scroll-cue at
+               240px if the straight top (V256 = 240 + 16) changes. -->
+          <a href="#mission" class="scroll-cue" aria-label={hero.scrollCue}>
+            <svg width="48" height="370" viewBox="0 0 48 370" fill="none" aria-hidden="true">
+              <path
+                class="scroll-cue-track"
+                d="M24 0 V256 q22 8 0 16 t0 16 t0 16 t0 16 t0 16 t0 16 V368 M14 358 L24 368 L34 358"
+              />
+              <path
+                class="scroll-cue-flow"
+                pathLength="100"
+                d="M24 0 V256 q22 8 0 16 t0 16 t0 16 t0 16 t0 16 t0 16 V368"
+              />
+            </svg>
+          </a>
         </Fragment>
       )
     }
@@ -161,7 +187,54 @@ const structuredData = [
 </Layout>
 
 <style>
-  /* The hero's "Our platform" button jumps here; land below the sticky header (93px). */
+  /* Centred under the subtitle; the negative margin pulls the 240px straight top
+     of the drawing back up behind the subtitle box (see the markup above). */
+  .scroll-cue svg {
+    display: block;
+    overflow: visible;
+  }
+  /* Navy line (same colour as the hero's divider dash in Hero.astro). The flowing
+     segment is a brighter blue, so it reads as a glint travelling down. */
+  .scroll-cue {
+    display: block;
+    width: fit-content;
+    margin: -240px auto 0;
+    --cue-color: #173765;
+    transition: opacity 0.2s;
+  }
+  .scroll-cue:hover,
+  .scroll-cue:focus-visible {
+    opacity: 0.8;
+  }
+  .scroll-cue path {
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+  .scroll-cue-track {
+    stroke: var(--cue-color);
+  }
+  /* The flowing segment: one dash, 12% of the line long, that travels from above
+     the top to past the arrowhead, over and over. */
+  .scroll-cue .scroll-cue-flow {
+    stroke: #367add;
+    stroke-dasharray: 12 100;
+    stroke-dashoffset: 12;
+    animation: scroll-cue-flow 2.4s linear infinite;
+  }
+  @keyframes scroll-cue-flow {
+    to {
+      stroke-dashoffset: -100;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-cue .scroll-cue-flow {
+      animation: none;
+    }
+  }
+
+  /* The hero's scroll cue jumps here; land below the sticky header (93px). */
   #mission {
     min-height: 30dvh;
     scroll-margin-top: 93px;
@@ -179,7 +252,7 @@ const structuredData = [
      The top 93px (the header's height) stay solid page colour, so the transparent
      header at the top matches the solid one it turns into on scroll — no pop. */
   .hero-sand {
-    --hero-sand: #e2d8cc;
+    --hero-sand: #eae3df; /* also the subtitle box fill in Hero.astro */
 
     background-color: var(--hero-sand);
     background-image: linear-gradient(to bottom, var(--aw-color-bg-page) 93px, var(--hero-sand) 35%);
