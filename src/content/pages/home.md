@@ -31,24 +31,10 @@ mission:
   tagline: 'Our mission'
   text: 'We develop therapies for genetic diseases which carry a lifelong burden and have no effective treatment options today.'
 
-approach:
-  # tagline: '[Our approach]'
-  title: 'Cutting-edge Genomics & AI '
-  content: 'Our AI-powered platform combines human genomics with computational modeling to discover and validate therapeutic targets that conventional approaches miss.'
-  items:
-    - title: '[Step or principle]'
-      description: '[What it means in practice.]'
-    - title: '[Step or principle]'
-      description: '[What it means in practice.]'
-    - title: '[Step or principle]'
-      description: '[What it means in practice.]'
-  # Optional image beside the text:
-  image: { src: '~/assets/images/stock-image.jpg', alt: 'Stock photo' }
-
 cta:
   title: 'Interested in working together?'
   subtitle: 'Get in touch to explore partnership opportunities with us.'
   actions:
-    - { text: Contact us, href: '/careers#contact', variant: primary }
+    - { text: Contact us, href: '/contact', variant: primary }
 ---
 

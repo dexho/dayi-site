@@ -61,11 +61,6 @@ groups:
         bio: '[One sentence.]'
         links: []
 
-cta:
-  title: '[We are hiring]'
-  subtitle: '[One line pointing scientists and engineers at the open roles.]'
-  actions:
-    - { text: See open roles, href: /careers, variant: primary }
 ---
 
 [Optional intro prose, shown above the people. Useful for a paragraph on how

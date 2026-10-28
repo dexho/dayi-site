@@ -41,25 +41,6 @@ pillars:
       description: '[Two sentences.]'
       icon: 'tabler:shield-check'
 
-process:
-  tagline: '[How it works]'
-  title: '[From target to candidate]'
-  items:
-    - title: '[Stage one]'
-      description: '[What happens at this stage and what comes out of it.]'
-      icon: 'tabler:search'
-    - title: '[Stage two]'
-      description: '[What happens at this stage.]'
-      icon: 'tabler:settings-automation'
-    - title: '[Stage three]'
-      description: '[What happens at this stage.]'
-      icon: 'tabler:test-pipe'
-    - title: '[Stage four]'
-      description: '[What happens at this stage.]'
-      icon: 'tabler:check'
-  # Optional image beside the steps:
-  # image: { src: '~/assets/images/process.jpg', alt: '[Describe the image]' }
-
 # details:
 #   title: '[The science in more detail]'
 #   subtitle: '[One line for readers who want the mechanism, not the summary.]'
@@ -68,7 +49,7 @@ process:
 #   title: '[Want the full picture?]'
 #   subtitle: '[Offer a deck, a data package or a conversation.]'
 #   actions:
-#     - { text: Request more information, href: '/careers#contact', variant: primary }
+#     - { text: Request more information, href: '/contact', variant: primary }
 ---
 
 <!-- ## [Section heading — e.g. the biological problem]

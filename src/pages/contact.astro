@@ -1,0 +1,60 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+import Button from '~/components/ui/Button.astro';
+import Headline from '~/components/ui/Headline.astro';
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+
+import { getContent } from '~/utils/content';
+import { md, mdInline } from '~/utils/markdown';
+
+// Copy lives in src/content/pages/contact.md; the addresses below come from
+// src/content/site.md so they are only written once.
+const page = await getContent('contact');
+const { title, description, contact } = page.data;
+
+const site = await getContent('site');
+const { email, phone, address } = site.data.contact;
+---
+
+<Layout metadata={{ title, description }}>
+  <!-- Contact: addresses come from src/content/site.md -->
+  <WidgetWrapper id="contact" containerClass="max-w-4xl mx-auto">
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-primary/5 dark:bg-transparent"></div>
+    </Fragment>
+
+    <Headline
+      tagline={await mdInline(contact?.tagline)}
+      title={await mdInline(contact?.title)}
+      subtitle={await md(contact?.subtitle)}
+    />
+
+    <div class="mx-auto flex max-w-md flex-col items-center gap-4 sm:flex-row sm:justify-center">
+      <Button variant="primary" href={`mailto:${email}`} text={email} icon="tabler:mail" class="w-full sm:w-auto" />
+    </div>
+
+    {
+      (phone || address) && (
+        <dl class="mx-auto mt-10 grid max-w-2xl gap-8 text-center sm:grid-cols-2 sm:text-left">
+          {phone && (
+            <div>
+              <dt class="text-sm font-semibold tracking-wide text-heading uppercase">Phone</dt>
+              <dd class="mt-1 text-muted">
+                <a class="hover:text-primary hover:underline" href={`tel:${phone.replace(/[^+\d]/g, '')}`}>
+                  {phone}
+                </a>
+              </dd>
+            </div>
+          )}
+          {address && (
+            <div>
+              <dt class="text-sm font-semibold tracking-wide text-heading uppercase">Address</dt>
+              <dd class="mt-1 whitespace-pre-line text-muted">{address.trim()}</dd>
+            </div>
+          )}
+        </dl>
+      )
+    }
+  </WidgetWrapper>
+</Layout>

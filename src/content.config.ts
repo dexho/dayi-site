@@ -124,10 +124,9 @@ const site = defineCollection({
       /** Copyright line. */
       note: z.string().optional(),
     }),
-    /** Used by the careers page contact block and by `mailto:` buttons. */
+    /** Used by the contact page and by `mailto:` buttons. */
     contact: z.object({
       email: z.string(),
-      jobsEmail: z.string(),
       phone: z.string().optional(),
       address: z.string().optional(),
     }),
@@ -218,31 +217,10 @@ const team = page('team.md', {
   cta: cta.optional(),
 });
 
-/** Careers + contact page. The markdown body is the "what it's like" prose. */
-const careers = page('careers.md', {
-  hero,
-  /** What the company offers. */
-  benefits: section({ items: z.array(item).default([]) }).optional(),
-  openings: section({
-    /** Shown when `items` is empty — e.g. during a hiring freeze. */
-    emptyMessage: z.string().optional(),
-    items: z
-      .array(
-        z.object({
-          title: z.string(),
-          location: z.string().optional(),
-          /** e.g. "Full-time", "Contract", "Internship". */
-          type: z.string().optional(),
-          /** Overrides the site-wide jobs address for this role. */
-          applyEmail: z.string().optional(),
-          /** Markdown. Use `|` for a multi-paragraph description. */
-          description: z.string().optional(),
-        })
-      )
-      .default([]),
-  }).optional(),
-  /** Heading for the contact block; the addresses come from `site.md`. */
+/** Contact page. The addresses come from `site.md`. */
+const contact = page('contact.md', {
+  /** Heading for the contact block. */
   contact: section({}).optional(),
 });
 
-export const collections = { site, home, platform, team, careers };
+export const collections = { site, home, platform, team, contact };
