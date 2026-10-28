@@ -12,8 +12,8 @@ description: '[Search-engine description, roughly 155 characters: what the compa
 
 hero:
   # badge: '[Preclinical stage]'
-  title: 'Breakthrough therapies <br> with RNA science'
-  subtitle: 'Selective, reversible, and personalized:<br>A new story for genetic disorders.'
+  title: 'RNA Regulatory Biology <br> to New Medicines'
+  subtitle: "We're targeting endogenous gene expression:<br>A new story for genetic disorders."
   # Wavy arrow near the bottom of the hero scrolls down to the next section;
   # this is its label for screen readers.
   scrollCue: 'Our platform'
@@ -26,11 +26,14 @@ hero:
   # in src/pages/index.astro to the new artwork's sky colour.
   backdrop: { src: '~/assets/images/AdobeStock_562963511 [Converted].png', alt: '' }
 
+# Headline above the mission and platform statements.
+headline: 'Target Endogenous Gene Expression and Transform RNA Regulatory Biology into Medicines'
+
 # Mission and platform statements, right below the hero, beside a grid of
 # circles. They fade in one after the other.
 mission:
-  tagline: 'Mission'
-  text: 'We develop therapies for genetic diseases which carry a lifelong burden and have no effective treatment options today.'
+  tagline: 'A new class of genetic medicines'
+  text: 'At a molecular level, many disorders are caused by insufficient gene expression. We aim to modulate actionable RNA regulatory mechanisms to restore healthy protein levels. Leveraging clinically validated therapeutic modalities such as antisense oligonucleotides (ASOs), we translate discoveries in RNA biology into precision medicines.'
 
 # Shown under the mission. The button sits centred below the text and fades in last.
 platform:
