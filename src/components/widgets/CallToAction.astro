@@ -46,7 +46,11 @@ const {
       classes={{
         container: 'mb-0 md:mb-0',
         title: `text-4xl md:text-4xl font-bold tracking-tighter mb-4 font-heading ${layout === 'banner' ? 'text-white' : ''}`,
-        subtitle: layout === 'banner' ? 'text-xl text-white' : 'text-xl text-muted dark:text-slate-400',
+        // Same type as the home page hero's subtitle.
+        subtitle:
+          layout === 'banner'
+            ? 'text-base md:text-lg font-medium leading-relaxed text-white'
+            : 'text-base md:text-lg font-medium leading-relaxed text-default dark:text-slate-200',
         ...((classes?.headline as Record<string, string>) ?? {}),
       }}
     />
