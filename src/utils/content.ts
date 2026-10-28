@@ -20,3 +20,11 @@ export const getContent = async <C extends keyof DataEntryMap>(collection: C): P
 
   return entry;
 };
+
+/**
+ * True when a page's markdown body has something to show. Text wrapped in an
+ * HTML comment (`<!-- ... -->`) doesn't count, so commenting the whole body out
+ * hides its section instead of leaving an empty one.
+ */
+export const hasBodyContent = (body?: string): boolean =>
+  Boolean(body?.replace(/<!--[\s\S]*?-->/g, '').trim());

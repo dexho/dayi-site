@@ -12,6 +12,6 @@ title: Contact
 description: '[Search-engine description: how to reach the company, roughly 155 characters.]'
 
 contact:
-  title: '[Get in touch]'
-  subtitle: '[One line on what the company wants to hear about: collaborations, licensing, speculative applications, press.]'
+  title: 'Get in touch'
+  subtitle: 'We are interested in xyz.'
 ---

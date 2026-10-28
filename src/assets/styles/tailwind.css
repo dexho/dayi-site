@@ -54,12 +54,52 @@
   color: var(--aw-color-text-muted);
 }
 
+/* Buttons are near-black text in a thin, square-cornered dark grey outline,
+   followed by an arrow (Button.astro adds it). On hover or press the text and
+   arrow light up in the primary blue and the box fills in light grey. */
 @utility btn {
-  @apply inline-flex items-center justify-center rounded-full border-gray-400 border bg-transparent font-medium text-center text-base text-page leading-snug transition py-3.5 px-6 md:px-8 ease-in duration-200 focus:ring-blue-500 focus:ring-offset-blue-200 focus:ring-2 focus:ring-offset-2 hover:bg-gray-100 hover:border-gray-600 dark:text-slate-300 dark:border-slate-500 dark:hover:bg-slate-800 dark:hover:border-slate-800 cursor-pointer;
+  @apply relative inline-flex items-center justify-center gap-1.5 rounded-none border border-gray-700 bg-transparent font-medium text-center text-base text-gray-900 leading-snug transition-colors duration-200 ease-in py-2.5 px-5 cursor-pointer hover:bg-gray-100 hover:border-gray-900 hover:text-primary active:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 dark:text-slate-200 dark:border-slate-400 dark:hover:bg-slate-800 dark:hover:border-slate-200 dark:hover:text-blue-200 dark:active:text-blue-200;
+}
+
+/* A short blue segment travels around each button's outline on a loop.
+   Button.astro adds an SVG laid exactly over the 1px border; its rectangle is
+   measured as 100 units round (pathLength), so the dash is always 12% of the
+   outline and moves at an even speed along every side. */
+.btn-glint {
+  position: absolute;
+  inset: -1px;
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+  overflow: visible;
+  pointer-events: none;
+}
+.btn-glint rect {
+  x: 0.5px;
+  y: 0.5px;
+  width: calc(100% - 1px);
+  height: calc(100% - 1px);
+  fill: none;
+  stroke: var(--aw-color-primary);
+  stroke-width: 1px;
+  stroke-dasharray: 12 88;
+  animation: btn-glint 3s linear infinite;
+}
+.dark .btn-glint rect {
+  stroke: var(--color-blue-200);
+}
+@keyframes btn-glint {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-glint {
+    display: none;
+  }
 }
 
 @utility btn-primary {
-  @apply btn font-semibold bg-primary text-white border-primary hover:bg-secondary hover:border-secondary hover:text-white dark:text-white dark:bg-primary dark:border-primary dark:hover:border-secondary dark:hover:bg-secondary;
+  @apply btn;
 }
 
 @utility btn-secondary {
@@ -67,7 +107,7 @@
 }
 
 @utility btn-tertiary {
-  @apply btn border-none shadow-none text-muted hover:text-gray-900 dark:text-gray-400 dark:hover:text-white;
+  @apply btn text-muted hover:text-gray-900 dark:text-gray-400 dark:hover:text-white;
 }
 
 /* Sticky header: solid page background on phones, translucent page background with blur on desktop. */

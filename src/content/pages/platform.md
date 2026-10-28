@@ -10,17 +10,17 @@
 title: Platform
 description: '[Search-engine description of the technology, roughly 155 characters.]'
 
-hero:
-  # badge: '[Technology]'
-  title: '[Name of the platform]'
-  subtitle: '[Two or three sentences for a scientifically literate reader: the modality, the biology it acts on, and why the approach is tractable now.]<br><br>'
-  # actions:
-  #   - { text: See the science, href: '#details', variant: primary }
+# hero:
+#   # badge: '[Technology]'
+#   title: 'Genomics x AI'
+#   subtitle: '[Two or three sentences for a scientifically literate reader: the modality, the biology it acts on, and why the approach is tractable now.]<br><br>'
+#   # actions:
+#   #   - { text: See the science, href: '#details', variant: primary }
 
 pillars:
-  tagline: '[Platform]'
-  title: '[The pieces that make it work]'
-  subtitle: '[One line framing the cards below.]'
+  # tagline: '[Platform]'
+  title: 'Genomics x AI'
+  # subtitle: '[One line framing the cards below.]'
   items:
     - title: '[Component or capability]'
       description: '[Two sentences on what it is and what it enables.]'

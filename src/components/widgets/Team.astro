@@ -23,7 +23,9 @@ const {
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
 
-const columnsClass = getColumnsClass(columns, 'sm:grid-cols-2');
+// Four people fit side by side from tablet width up (the shared helper waits for
+// desktop width, which leaves a 3 + 1 split on tablets).
+const columnsClass = columns === 4 ? 'sm:grid-cols-2 md:grid-cols-4' : getColumnsClass(columns, 'sm:grid-cols-2');
 
 const initials = (name = '') =>
   name

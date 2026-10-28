@@ -7,7 +7,7 @@ import Steps from '~/components/widgets/Steps.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 import Prose from '~/components/ui/Prose.astro';
 
-import { getContent } from '~/utils/content';
+import { getContent, hasBodyContent } from '~/utils/content';
 import { md, mdInline, mdItems } from '~/utils/markdown';
 import { render } from 'astro:content';
 
@@ -15,18 +15,22 @@ import { render } from 'astro:content';
 const page = await getContent('platform');
 const { title, description, hero, pillars, process, details, cta } = page.data;
 const { Content: Body } = await render(page);
-const hasBody = Boolean(page.body?.trim());
+const hasBody = hasBodyContent(page.body);
 ---
 
 <Layout metadata={{ title, description }}>
-  <Hero
-    badge={hero.badge}
-    tagline={await mdInline(hero.tagline)}
-    title={await mdInline(hero.title)}
-    subtitle={await md(hero.subtitle)}
-    actions={hero.actions}
-    image={hero.image}
-  />
+  {
+    hero && (
+      <Hero
+        badge={hero.badge}
+        tagline={await mdInline(hero.tagline)}
+        title={await mdInline(hero.title)}
+        subtitle={await md(hero.subtitle)}
+        actions={hero.actions}
+        image={hero.image}
+      />
+    )
+  }
 
   {
     pillars && (

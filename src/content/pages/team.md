@@ -15,54 +15,33 @@
 title: Team
 description: '[Search-engine description: who is behind the company, roughly 155 characters.]'
 
-hero:
-  title: '[The people building it]'
-  subtitle: '[One or two sentences on the mix of expertise — the disciplines, where people came from, how the team works.]'
+# hero:
+#   title: '[The people building it]'
+#   subtitle: '[One or two sentences on the mix of expertise — the disciplines, where people came from, how the team works.]'
 
 groups:
-  - title: '[Leadership]'
-    columns: 3
+  - title: 'Leadership'
+    columns: 4
     members:
-      - name: '[Full Name]'
-        role: '[Chief Executive Officer]'
-        bio: '[Two sentences: the relevant experience, and what they do here. Prior institutions and companies belong in the first sentence.]'
+      - name: 'Zuo Zhang'
+        # role: 'VP & Head of Biology'
+        # bio: '[Two sentences: the relevant experience, and what they do here. Prior institutions and companies belong in the first sentence.]'
         # image: { src: '~/assets/images/team/full-name.jpg', alt: '[Full Name]' }
         links:
           - { icon: 'tabler:brand-linkedin', href: 'https://www.linkedin.com/in/example', ariaLabel: '[Full Name] on LinkedIn' }
-      - name: '[Full Name]'
-        role: '[Chief Scientific Officer]'
-        bio: '[Two sentences.]'
+      - name: 'Francesco Lotti'
+        # role: 'CSO & Head of Biology'
+        # bio: '[Two sentences.]'
         links:
           - { icon: 'tabler:brand-linkedin', href: 'https://www.linkedin.com/in/example', ariaLabel: '[Full Name] on LinkedIn' }
           - { icon: 'tabler:school', href: 'https://scholar.google.com/citations?user=example', ariaLabel: '[Full Name] on Google Scholar' }
-      - name: '[Full Name]'
-        role: '[Head of Platform]'
-        bio: '[Two sentences.]'
+      - name: 'Chaolin Zhang'
+        role: 'Scientific advisor'
+        # bio: '[One sentence on their field.]'
         links: []
-
-  - title: '[Scientific advisors]'
-    subtitle: '[One line on the advisory board’s role.]'
-    columns: 4
-    members:
-      - name: '[Full Name, PhD]'
-        role: '[Affiliation or chair]'
-        bio: '[One sentence on their field.]'
-        links: []
-      - name: '[Full Name, MD]'
-        role: '[Affiliation]'
-        bio: '[One sentence.]'
-        links: []
-      - name: '[Full Name, PhD]'
-        role: '[Affiliation]'
-        bio: '[One sentence.]'
-        links: []
-      - name: '[Full Name, PhD]'
-        role: '[Affiliation]'
-        bio: '[One sentence.]'
+      - name: 'Wendy Chung'
+        role: 'Scientific advisor'
+        # bio: '[One sentence.]'
         links: []
 
 ---
-
-[Optional intro prose, shown above the people. Useful for a paragraph on how
-the team is organised, the advisory relationships, or the hiring philosophy.
-Delete this paragraph to leave the section out.]

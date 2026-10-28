@@ -8,9 +8,10 @@ import CallToAction from '~/components/widgets/CallToAction.astro';
 import StructuredData from '~/components/common/StructuredData.astro';
 import Image from '~/components/common/Image.astro';
 import Prose from '~/components/ui/Prose.astro';
+import Button from '~/components/ui/Button.astro';
 
 import { SITE } from 'astrowind:config';
-import { getContent } from '~/utils/content';
+import { getContent, hasBodyContent } from '~/utils/content';
 import { findImage } from '~/utils/images';
 import { md, mdInline, mdItems } from '~/utils/markdown';
 import { render } from 'astro:content';
@@ -18,7 +19,7 @@ import favIconSvg from '~/assets/favicons/favicon.svg';
 
 // All copy lives in src/content/pages/home.md — nothing on this page is hardcoded.
 const page = await getContent('home');
-const { title, description, hero, mission, approach, stats, cta } = page.data;
+const { title, description, hero, mission, platform, approach, stats, cta } = page.data;
 // Hero backdrop (set in home.md as `hero.backdrop`). Resolved here so the srcset
 // fits whatever artwork is dropped in: variants wider than the file itself would
 // only upscale it, so the file's own width caps the list. Nothing wider than 2560px
@@ -32,7 +33,7 @@ const backdropWidths =
     : BACKDROP_WIDTHS;
 
 const { Content: Body } = await render(page);
-const hasBody = Boolean(page.body?.trim());
+const hasBody = hasBodyContent(page.body);
 
 const structuredData = [
   {
@@ -132,23 +133,78 @@ const structuredData = [
        viewport, so the sections scrolling over it need a background of their own to
        hide it. `relative` matters as much as the colour — a static block paints below
        positioned elements, and the pinned artwork is one. -->
-  <div class="relative bg-page">
+  <!-- `isolate` keeps section backgrounds (drawn one layer back, at -z-1) above this
+       surface instead of behind it. -->
+  <div class="relative isolate bg-page">
     {
-      mission && (
-        <section id="mission" class="flex items-center justify-center px-4 sm:px-6">
-          <div class="max-w-3xl text-center intersect-once intersect-half motion-safe:opacity-0 motion-safe:intersect:animate-fade">
-            {
-              mission.tagline && (
-                <h2
-                  class="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-primary dark:text-blue-200"
-                  set:html={await mdInline(mission.tagline)}
-                />
-              )
-            }
-            <p
-              class="text-xl md:text-2xl font-normal leading-relaxed text-default dark:text-slate-200"
-              set:html={await mdInline(mission.text)}
-            />
+      // Mission and platform, one row each. Each row has a small 3 × 3 grid of
+      // circles in the left third (mission: outlines with a few red dashed ones;
+      // platform: just the middle circle, solid red), its top level with the
+      // row's heading, and the statement in the other two thirds, left-aligned.
+      // The platform button sits under the platform statement. On phones each grid sits above its text. The pieces
+      // fade in one after another once the section scrolls into view (see
+      // .statement-seq below). The section keeps the #mission id: it is where
+      // the hero's arrow scrolls to.
+      (mission || platform) && (
+        <section id="mission" class="statement flex items-center justify-center px-4 sm:px-6">
+          <div class="statement-seq intersect intersect-once intersect-quarter flex w-full max-w-5xl flex-col gap-12 py-12">
+            {[
+              // Highlighted circles per grid, as "column,row" (both counted from 0,
+              // top left). `mark` sets how they're drawn: 'filled' (solid red) or
+              // 'dashed' (red dashed outline, no fill). `onlyMarked` leaves the
+              // other circles out, so only the highlighted ones show.
+              { band: mission, marked: ['1,0', '0,1', '2,2'], mark: 'dashed', onlyMarked: false },
+              { band: platform, marked: ['1,1'], mark: 'filled', onlyMarked: true },
+            ].map(
+              async ({ band, marked, mark, onlyMarked }, i) =>
+                band && (
+                  <div class="grid items-start gap-6 md:grid-cols-3 md:gap-16">
+                    <svg
+                      class="seq-item mx-auto w-full max-w-[6rem] md:max-w-[8rem]"
+                      style={`--seq-delay: ${i * 300}ms`}
+                      viewBox="0 0 120 120"
+                      fill="none"
+                      aria-hidden="true"
+                    >
+                      {Array.from({ length: 9 }, (_, n) => {
+                        const col = n % 3;
+                        const row = Math.floor(n / 3);
+                        const isMarked = marked.includes(`${col},${row}`);
+                        if (onlyMarked && !isMarked) return null;
+                        return (
+                          <circle
+                            cx={20 + col * 40}
+                            cy={20 + row * 40}
+                            r="16"
+                            pathLength="100"
+                            class={isMarked ? `dot dot-${mark}` : 'dot'}
+                          />
+                        );
+                      })}
+                    </svg>
+
+                    <div class="md:col-span-2">
+                      <div class="seq-item" style={`--seq-delay: ${i * 300}ms`}>
+                        {band.tagline && (
+                          <h2
+                            class="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary dark:text-blue-200"
+                            set:html={await mdInline(band.tagline)}
+                          />
+                        )}
+                        <p
+                          class="max-w-xl text-[1.1875rem] md:text-[1.375rem] font-normal leading-normal text-default dark:text-slate-200"
+                          set:html={await mdInline(band.text)}
+                        />
+                      </div>
+                      {band.action && (
+                        <div class="seq-item mt-6" style="--seq-delay: 650ms">
+                          <Button variant="primary" {...band.action} />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )
+            )}
           </div>
         </section>
       )
@@ -344,8 +400,42 @@ const structuredData = [
   }
 
   /* The hero's scroll cue jumps here; land below the sticky header (93px). */
-  #mission {
+  .statement {
     min-height: 30dvh;
+  }
+  /* Staged fade-in for the mission/platform section. The container is watched
+     by the site's scroll observer (the bare `intersect` class), which removes
+     its `no-intersect` attribute once it is in view; each .seq-item then fades up
+     after its own --seq-delay. */
+  @media (prefers-reduced-motion: no-preference) {
+    .statement-seq .seq-item {
+      opacity: 0;
+    }
+    .statement-seq:not([no-intersect]) .seq-item {
+      animation: fadeInUp 0.6s ease-out both;
+      animation-delay: var(--seq-delay, 0ms);
+    }
+  }
+
+  /* Circle grid beside the mission: navy outlines like the hero arrow, a few
+     dots filled in the hero sun's red. */
+  .dot {
+    stroke: #173765;
+    stroke-width: 1.5;
+  }
+  .dot-filled {
+    fill: #d4265c;
+    stroke: #d4265c;
+  }
+  /* pathLength="100" on each circle makes this ten even dashes all the way round. */
+  .dot-dashed {
+    stroke: #d4265c;
+    stroke-dasharray: 6 4;
+  }
+  :global(.dark) .dot:not(.dot-filled, .dot-dashed) {
+    stroke: var(--color-slate-400);
+  }
+  #mission {
     scroll-margin-top: 93px;
   }
 

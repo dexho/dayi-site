@@ -143,17 +143,21 @@ const page = <T extends z.ZodRawShape>(file: string, shape: T) =>
     schema: z.object({ ...seo, ...shape }),
   });
 
+/** A short labelled statement on the landing page, with an optional button centred below it. */
+const statement = z.object({
+  /** Small all-caps label above the statement. */
+  tagline: z.string().optional(),
+  text: z.string(),
+  action: action.optional(),
+});
+
 /** Landing page. The markdown body, if any, is prose above the closing CTA. */
 const home = page('home.md', {
   hero,
-  /** One-sentence mission statement, centred in its own band right below the hero. */
-  mission: z
-    .object({
-      /** Small all-caps label above the statement. */
-      tagline: z.string().optional(),
-      text: z.string(),
-    })
-    .optional(),
+  /** One-sentence mission statement, in the band right below the hero. */
+  mission: statement.optional(),
+  /** Shown under the mission, with a button to the platform page. */
+  platform: statement.optional(),
   /** Text-and-image block: `content` is the paragraph, `items` the checklist. */
   approach: section({
     content: z.string().optional(),
@@ -169,7 +173,8 @@ const home = page('home.md', {
 
 /** Technology page. The markdown body is the long-form technical detail. */
 const platform = page('platform.md', {
-  hero,
+  /** Optional: leave it out and the page opens straight on the pillars. */
+  hero: hero.optional(),
   /** Card grid of the technology's main ideas. */
   pillars: section({ items: z.array(item).default([]) }).optional(),
   /** Numbered steps, shown as a timeline. */
@@ -184,7 +189,8 @@ const platform = page('platform.md', {
 
 /** People page. Add a person by adding an entry under a group's `members`. */
 const team = page('team.md', {
-  hero,
+  /** Optional: leave it out and the page opens straight on the people. */
+  hero: hero.optional(),
   groups: z
     .array(
       z.object({

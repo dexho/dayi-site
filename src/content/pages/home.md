@@ -26,13 +26,20 @@ hero:
   # in src/pages/index.astro to the new artwork's sky colour.
   backdrop: { src: '~/assets/images/AdobeStock_562963511 [Converted].png', alt: '' }
 
-# Mission statement, centred in its own band right below the hero.
+# Mission and platform statements, right below the hero, beside a grid of
+# circles. They fade in one after the other.
 mission:
-  tagline: 'Our mission'
+  tagline: 'Mission'
   text: 'We develop therapies for genetic diseases which carry a lifelong burden and have no effective treatment options today.'
 
+# Shown under the mission. The button sits centred below the text and fades in last.
+platform:
+  tagline: 'Platform'
+  text: 'Cutting-edge genomics + AI modeling reveals therapeutic targets that past approaches have missed.'
+  action: { text: Learn more, href: /platform }
+
 cta:
-  title: 'Interested in working together?'
+  title: "Let's work together"
   subtitle: 'Get in touch to explore partnership opportunities with us.'
   actions:
     - { text: Contact us, href: '/contact', variant: primary }

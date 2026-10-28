@@ -111,8 +111,8 @@ const hasCue = Astro.slots.has('cue');
               <div class="max-w-xs sm:max-w-xl m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-4 sm:gap-8 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
                 {Array.isArray(actions) ? (
                   actions.map((action) => (
-                    <div class="flex w-full sm:w-auto">
-                      <Button {...(action || {})} class="w-full sm:mb-0 rounded-none" />
+                    <div class="flex justify-center">
+                      <Button {...(action || {})} />
                     </div>
                   ))
                 ) : (

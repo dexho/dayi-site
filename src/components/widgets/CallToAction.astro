@@ -28,7 +28,9 @@ const {
 } = Astro.props;
 ---
 
+<!-- Sits on the same light blue band as the contact block, unless a `bg` slot replaces it. -->
 <WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
+  {!bg && <div slot="bg" class="absolute inset-0 bg-primary/5 dark:bg-transparent" />}
   <div
     class:list={[
       'text-center',
@@ -53,15 +55,15 @@ const {
         <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-4 mt-6">
           {Array.isArray(actions) ? (
             actions.map((action) => (
-              <div class="flex w-full sm:w-auto">
+              <div class="flex justify-center">
                 <Button
                   {...(action || {})}
                   class:list={[
-                    'w-full sm:mb-0 whitespace-nowrap',
+                    'whitespace-nowrap',
                     layout === 'banner' && action?.variant === 'primary'
-                      ? 'bg-white text-primary border-white hover:bg-white/90 hover:border-white/90 hover:text-primary dark:bg-white dark:text-primary dark:border-white'
+                      ? 'text-white border-white hover:bg-white/10 dark:text-white dark:border-white'
                       : layout === 'banner'
-                        ? 'text-white border-white/70 hover:bg-white/10 hover:border-white hover:text-white dark:text-white dark:border-white/70'
+                        ? 'text-white/90 border-white/70 hover:bg-white/10 dark:text-white/90 dark:border-white/70'
                         : '',
                   ]}
                 />

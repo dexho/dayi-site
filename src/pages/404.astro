@@ -1,6 +1,7 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 import { getHomePermalink } from '~/utils/permalinks';
+import Button from '~/components/ui/Button.astro';
 ---
 
 <Layout metadata={{ title: 'Page not found' }}>
@@ -15,7 +16,7 @@ import { getHomePermalink } from '~/utils/permalinks';
         <p class="mt-4 mb-8 text-lg text-muted dark:text-slate-400">
           The link may be out of date, or the page may have moved.
         </p>
-        <a href={getHomePermalink()} class="btn">Back to homepage</a>
+        <Button variant="secondary" href={getHomePermalink()} text="Back to homepage" />
       </div>
     </div>
   </section>

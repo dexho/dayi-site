@@ -6,7 +6,7 @@ import Team from '~/components/widgets/Team.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 import Prose from '~/components/ui/Prose.astro';
 
-import { getContent } from '~/utils/content';
+import { getContent, hasBodyContent } from '~/utils/content';
 import { md, mdInline } from '~/utils/markdown';
 import { render } from 'astro:content';
 
@@ -14,7 +14,7 @@ import { render } from 'astro:content';
 const page = await getContent('team');
 const { title, description, hero, groups, cta } = page.data;
 const { Content: Body } = await render(page);
-const hasBody = Boolean(page.body?.trim());
+const hasBody = hasBodyContent(page.body);
 
 // Bios accept markdown, so render each member's before handing the group to
 // the widget (it prints them with `set:html`).
@@ -30,14 +30,18 @@ const renderedGroups = await Promise.all(
 ---
 
 <Layout metadata={{ title, description }}>
-  <Hero
-    badge={hero.badge}
-    tagline={await mdInline(hero.tagline)}
-    title={await mdInline(hero.title)}
-    subtitle={await md(hero.subtitle)}
-    actions={hero.actions}
-    image={hero.image}
-  />
+  {
+    hero && (
+      <Hero
+        badge={hero.badge}
+        tagline={await mdInline(hero.tagline)}
+        title={await mdInline(hero.title)}
+        subtitle={await md(hero.subtitle)}
+        actions={hero.actions}
+        image={hero.image}
+      />
+    )
+  }
 
   {
     hasBody && (
