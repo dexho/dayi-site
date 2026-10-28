@@ -80,7 +80,10 @@ const hasCue = Astro.slots.has('cue');
              subtitle sits on a box filled with the hero's background colour, so the
              line seems to break around the text, and `overflow-hidden` trims the top
              of the line where it meets the title. The cue replaces the divider dash. -->
-        <div class:list={['max-w-4xl mx-auto', hasCue && 'relative overflow-hidden pt-4']}>
+        <div
+          class:list={['max-w-4xl mx-auto', hasCue && 'relative overflow-hidden pt-4']}
+          data-cue-frame={hasCue ? '' : undefined}
+        >
           {
             // A div, not a <p>: the subtitle arrives as rendered markdown with its own
             // <p> inside, and a <p> nested in a <p> gets split apart by the browser,
@@ -90,9 +93,7 @@ const hasCue = Astro.slots.has('cue');
                 class:list={[
                   'text-base md:text-lg font-medium leading-relaxed text-default dark:text-slate-200 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade',
                   // Box colour matches --hero-sand in src/pages/index.astro.
-                  hasCue
-                    ? 'relative z-10 inline-block align-top bg-[#eae3df] px-6 pt-2 pb-5 md:px-8'
-                    : 'mb-6',
+                  hasCue ? 'relative z-10 inline-block align-top bg-[#eae3df] px-6 pt-2 pb-5 md:px-8' : 'mb-6',
                 ]}
                 set:html={subtitle}
               />

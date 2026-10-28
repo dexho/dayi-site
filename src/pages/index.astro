@@ -83,6 +83,9 @@ const structuredData = [
                Hero.astro trims whatever reaches above the title. A brighter segment
                flows down the whole length on a loop. Keep the margin in .scroll-cue at
                240px if the straight top (V256 = 240 + 16) changes. -->
+          <!-- <cue-sweep> (script below) pins the arrow in the window as the page
+               scrolls and collapses it from both ends towards the middle. -->
+          <cue-sweep>
           <a href="#mission" class="scroll-cue" aria-label={hero.scrollCue}>
             <svg width="48" height="370" viewBox="0 0 48 370" fill="none" aria-hidden="true">
               <path
@@ -96,6 +99,7 @@ const structuredData = [
               />
             </svg>
           </a>
+          </cue-sweep>
         </Fragment>
       )
     }
@@ -186,7 +190,112 @@ const structuredData = [
   </div>
 </Layout>
 
+<script>
+  // The hero's wavy arrow stays put in the window while the page scrolls under it,
+  // and collapses from both ends at once: the tail wipes down while the arrowhead
+  // wipes up, meeting in the middle. It is gone halfway to the point where the page
+  // surface below the hero would reach the arrowhead (or the mission section reaches
+  // its scroll target, if sooner), so nothing ever covers the arrow.
+  // Clicking the arrow (or the click zone along the hero's bottom) scrolls smoothly,
+  // so the wipe plays out instead of the arrow vanishing in one jump.
+  class CueSweep extends HTMLElement {
+    private link?: HTMLAnchorElement;
+    private svg?: SVGSVGElement;
+    private frame?: HTMLElement;
+    private target?: HTMLElement;
+    private triggers: HTMLAnchorElement[] = [];
+    /** Arrow-local y where the visible line starts at rest (the frame's top edge). */
+    private tailStart = 0;
+    private height = 0;
+    /** Latest scroll distance the collapse may run to; it actually ends at half. */
+    private end = 1;
+    private raf = 0;
+
+    connectedCallback() {
+      this.link = this.querySelector('a') ?? undefined;
+      this.svg = this.link?.querySelector('svg') ?? undefined;
+      this.frame = this.closest<HTMLElement>('[data-cue-frame]') ?? undefined;
+      const hash = this.link?.hash;
+      this.target = (hash && document.getElementById(hash.slice(1))) || undefined;
+      if (!this.link || !this.svg || !this.frame || !this.target || !hash) return;
+
+      this.measure();
+      this.update();
+      // The frame used to trim the line at the title; the clip on the arrow does
+      // that now, and the frame must not cut off the arrow as it stays behind.
+      this.frame.style.overflow = 'visible';
+
+      window.addEventListener('scroll', this.onScroll, { passive: true });
+      window.addEventListener('resize', this.onResize);
+      document.fonts?.ready.then(this.onResize);
+
+      this.triggers = [...document.querySelectorAll<HTMLAnchorElement>(`a[href="${hash}"]`)];
+      this.triggers.forEach((a) => a.addEventListener('click', this.onClick));
+    }
+
+    disconnectedCallback() {
+      window.removeEventListener('scroll', this.onScroll);
+      window.removeEventListener('resize', this.onResize);
+      this.triggers.forEach((a) => a.removeEventListener('click', this.onClick));
+      cancelAnimationFrame(this.raf);
+    }
+
+    private measure() {
+      const { link, svg, frame, target } = this;
+      if (!link || !svg || !frame || !target) return;
+      link.style.transform = '';
+      const sy = window.scrollY;
+      const box = svg.getBoundingClientRect();
+      this.tailStart = Math.max(0, frame.getBoundingClientRect().top - box.top);
+      this.height = box.height;
+      const surfaceTop = target.getBoundingClientRect().top + sy;
+      const scrollTarget = surfaceTop - (parseFloat(getComputedStyle(target).scrollMarginTop) || 0);
+      const headAtRest = box.bottom + sy;
+      this.end = Math.max(1, Math.min(surfaceTop - headAtRest, scrollTarget));
+    }
+
+    private update() {
+      const { link, svg } = this;
+      if (!link || !svg) return;
+      // Each end moves as fast as a single wipe over `end` would, so meeting in the
+      // middle takes half the distance.
+      const span = this.end / 2;
+      const s = Math.min(Math.max(window.scrollY, 0), span);
+      const p = s / span;
+      const mid = (this.tailStart + this.height) / 2;
+      const top = this.tailStart + p * (mid - this.tailStart);
+      const bottom = p * (this.height - mid);
+      link.style.transform = s ? `translateY(${s}px)` : '';
+      svg.style.clipPath = `inset(${top}px 0 ${bottom}px 0)`;
+      link.style.visibility = p >= 1 ? 'hidden' : '';
+    }
+
+    private onScroll = () => {
+      cancelAnimationFrame(this.raf);
+      this.raf = requestAnimationFrame(() => this.update());
+    };
+
+    private onResize = () => {
+      this.measure();
+      this.update();
+    };
+
+    private onClick = (e: MouseEvent) => {
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      e.preventDefault();
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      this.target?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+    };
+  }
+
+  if (!customElements.get('cue-sweep')) customElements.define('cue-sweep', CueSweep);
+</script>
+
 <style>
+  cue-sweep {
+    display: block;
+  }
+
   /* Centred under the subtitle; the negative margin pulls the 240px straight top
      of the drawing back up behind the subtitle box (see the markup above). */
   .scroll-cue svg {
