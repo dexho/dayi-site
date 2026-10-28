@@ -141,14 +141,13 @@ const structuredData = [
       // circles in the left third (mission: outlines with a few red dashed ones;
       // platform: just the middle circle, solid red), its top level with the
       // row's heading, and the statement in the other two thirds, left-aligned.
-      // A short blue dash, centred on the page, separates the two rows, and the
-      // platform button sits under the platform statement. On phones each grid sits above its text. The pieces
+      // The platform button sits under the platform statement. On phones each grid sits above its text. The pieces
       // fade in one after another once the section scrolls into view (see
       // .statement-seq below). The section keeps the #mission id: it is where
       // the hero's arrow scrolls to.
       (mission || platform) && (
         <section id="mission" class="statement flex items-center justify-center px-4 sm:px-6">
-          <div class="statement-seq intersect intersect-once intersect-quarter flex w-full max-w-5xl flex-col gap-10 py-20 md:py-32">
+          <div class="statement-seq intersect intersect-once intersect-quarter flex w-full max-w-5xl flex-col gap-14 py-20 md:gap-16 md:py-32">
             {[
               // Highlighted circles per grid, as "column,row" (both counted from 0,
               // top left). `mark` sets how they're drawn: 'filled' (solid red) or
@@ -159,14 +158,6 @@ const structuredData = [
             ].map(
               async ({ band, marked, mark, onlyMarked }, i) =>
                 band && (
-                  <Fragment>
-                  {i > 0 && mission && (
-                    <span
-                      class="seq-item mx-auto block h-5 w-[3px] bg-primary dark:bg-blue-200"
-                      style="--seq-delay: 150ms"
-                      aria-hidden="true"
-                    />
-                  )}
                   <div class="grid items-start gap-6 md:grid-cols-3 md:gap-16">
                     <svg
                       class="seq-item mx-auto w-full max-w-[6rem] md:max-w-[8rem]"
@@ -212,7 +203,6 @@ const structuredData = [
                       )}
                     </div>
                   </div>
-                  </Fragment>
                 )
             )}
           </div>
