@@ -27,7 +27,7 @@ const imageWhole = imageAspect === 'auto';
 
 <!-- 93px = header height: py-3 (24px) + logo (68px) + 1px border. Keep in sync with Logo.astro. --><!-- `fullHeight`: the section fills the window. On desktop it is pulled up under the
      sticky header, so a full viewport covers it; on mobile it starts below the header,
-     so that height comes off the top. Either way the fold lands on the section's edge. -->
+     so that height comes off the top. It fills the whole window. -->
 <section
   class:list={['relative md:-mt-[93px] not-prose', fullHeight && 'flex min-h-[calc(100dvh-93px)] md:min-h-dvh']}
   {...id ? { id } : {}}
@@ -39,7 +39,9 @@ const imageWhole = imageAspect === 'auto';
   </div>
   <div class:list={['relative max-w-7xl mx-auto px-4 sm:px-6', fullHeight && 'flex w-full flex-col justify-center']}>
     <div class="pt-0 md:pt-[93px] pointer-events-none"></div>
-    <div class="py-12 md:py-20">
+    <!-- Full-height heroes carry extra bottom padding so the centred text sits above
+         the middle, clear of the artwork along the bottom edge. -->
+    <div class:list={[fullHeight ? 'pt-8 pb-32 md:pt-12 md:pb-56' : 'py-12 md:py-20']}>
       <div class="text-center pb-10 md:pb-16 max-w-5xl mx-auto">
         {
           badge && (
@@ -59,7 +61,7 @@ const imageWhole = imageAspect === 'auto';
         {
           title && (
             <h1
-              class="text-5xl md:text-6xl font-bold leading-tighter tracking-tighter mb-4 font-heading text-heading intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+              class="text-5xl md:text-6xl font-bold leading-[1.2] tracking-tighter mb-6 font-heading text-heading intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
               set:html={title}
             />
           )
@@ -68,18 +70,18 @@ const imageWhole = imageAspect === 'auto';
           {
             subtitle && (
               <p
-                class="text-xl text-muted mb-6 dark:text-slate-300 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+                class="text-xl md:text-2xl font-medium leading-relaxed text-default mb-6 dark:text-slate-200 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
                 set:html={subtitle}
               />
             )
           }
           {
-            actions && (
-              <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-4 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+            actions && (!Array.isArray(actions) || actions.length > 0) && (
+              <div class="max-w-xs sm:max-w-xl m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-4 sm:gap-8 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
                 {Array.isArray(actions) ? (
                   actions.map((action) => (
                     <div class="flex w-full sm:w-auto">
-                      <Button {...(action || {})} class="w-full sm:mb-0" />
+                      <Button {...(action || {})} class="w-full sm:mb-0 rounded-none" />
                     </div>
                   ))
                 ) : (
@@ -120,4 +122,11 @@ const imageWhole = imageAspect === 'auto';
       </div>
     </div>
   </div>
+  {
+    Astro.slots.has('bottom') && (
+      <div class="absolute inset-x-0 bottom-8 md:bottom-12 flex justify-center">
+        <slot name="bottom" />
+      </div>
+    )
+  }
 </section>

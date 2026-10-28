@@ -2,13 +2,13 @@
 import Layout from '~/layouts/PageLayout.astro';
 
 import Hero from '~/components/widgets/Hero.astro';
-import Features from '~/components/widgets/Features.astro';
 import Content from '~/components/widgets/Content.astro';
 import Stats from '~/components/widgets/Stats.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 import StructuredData from '~/components/common/StructuredData.astro';
 import Image from '~/components/common/Image.astro';
 import Prose from '~/components/ui/Prose.astro';
+import Button from '~/components/ui/Button.astro';
 
 import { SITE } from 'astrowind:config';
 import { getContent } from '~/utils/content';
@@ -19,16 +19,18 @@ import favIconSvg from '~/assets/favicons/favicon.svg';
 
 // All copy lives in src/content/pages/home.md — nothing on this page is hardcoded.
 const page = await getContent('home');
-const { title, description, hero, highlights, approach, stats, cta } = page.data;
+const { title, description, hero, mission, approach, stats, cta } = page.data;
 // Hero backdrop (set in home.md as `hero.backdrop`). Resolved here so the srcset
 // fits whatever artwork is dropped in: variants wider than the file itself would
-// only upscale it, so the file's own width caps the list.
+// only upscale it, so the file's own width caps the list. Nothing wider than 2560px
+// is served, however large the source file is.
 const BACKDROP_WIDTHS = [640, 960, 1280, 1920, 2560];
 const backdrop = hero.backdrop ? await findImage(hero.backdrop.src) : null;
 const backdropWidth = backdrop && typeof backdrop === 'object' ? backdrop.width : undefined;
-const backdropWidths = backdropWidth
-  ? [...BACKDROP_WIDTHS.filter((w) => w < backdropWidth), backdropWidth]
-  : BACKDROP_WIDTHS;
+const backdropWidths =
+  backdropWidth && backdropWidth < 2560
+    ? [...BACKDROP_WIDTHS.filter((w) => w < backdropWidth), backdropWidth]
+    : BACKDROP_WIDTHS;
 
 const { Content: Body } = await render(page);
 const hasBody = Boolean(page.body?.trim());
@@ -58,6 +60,19 @@ const structuredData = [
     actions={hero.actions}
     image={hero.image}
   >
+    {
+      hero.scrollCue && mission && (
+        <Fragment slot="bottom">
+          <Button
+            variant="primary"
+            href="#mission"
+            text={hero.scrollCue}
+            icon="tabler:arrow-down"
+            class="rounded-none"
+          />
+        </Fragment>
+      )
+    }
     <Fragment slot="bg">
       <!-- Extends up behind the header (which isn't pulled over on mobile) so the fill starts at the very top. -->
       <div class="hero-sand absolute inset-x-0 bottom-0 -top-[93px] md:top-0">
@@ -69,6 +84,7 @@ const structuredData = [
                 alt={hero.backdrop?.alt ?? ''}
                 class="hero-backdrop fixed inset-x-0 bottom-0 h-auto max-h-[60dvh] object-cover object-bottom"
                 widths={backdropWidths}
+                width={backdropWidths[backdropWidths.length - 1]}
                 sizes="100vw"
                 format="webp"
                 layout="none"
@@ -88,15 +104,23 @@ const structuredData = [
        positioned elements, and the pinned artwork is one. -->
   <div class="relative bg-page">
     {
-      highlights && (
-        <Features
-          id="highlights"
-          columns={3}
-          tagline={await mdInline(highlights.tagline)}
-          title={await mdInline(highlights.title)}
-          subtitle={await md(highlights.subtitle)}
-          items={await mdItems(highlights.items)}
-        />
+      mission && (
+        <section id="mission" class="flex items-center justify-center px-4 sm:px-6">
+          <div class="max-w-3xl text-center intersect-once intersect-half motion-safe:opacity-0 motion-safe:intersect:animate-fade">
+            {
+              mission.tagline && (
+                <h2
+                  class="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-primary dark:text-blue-200"
+                  set:html={await mdInline(mission.tagline)}
+                />
+              )
+            }
+            <p
+              class="text-xl md:text-2xl font-normal leading-relaxed text-default dark:text-slate-200"
+              set:html={await mdInline(mission.text)}
+            />
+          </div>
+        </section>
       )
     }
 
@@ -137,6 +161,12 @@ const structuredData = [
 </Layout>
 
 <style>
+  /* The hero's "Our platform" button jumps here; land below the sticky header (93px). */
+  #mission {
+    min-height: 30dvh;
+    scroll-margin-top: 93px;
+  }
+
   /* The artwork's own sky doubles as the section's fill, so the area behind the
      band reads as more of the same picture rather than a block behind it, and it
      lifts to the page's white at the top of the window. Repoint --hero-sand at the
@@ -144,12 +174,15 @@ const structuredData = [
 
      The sand is fully in by 35%, which clears any artwork: the band is capped at
      60dvh, so its top edge can never rise above 40% of the section. The flat
-     colour underneath is the fallback if the gradient can't be painted. */
+     colour underneath is the fallback if the gradient can't be painted.
+
+     The top 93px (the header's height) stay solid page colour, so the transparent
+     header at the top matches the solid one it turns into on scroll — no pop. */
   .hero-sand {
-    --hero-sand: #e0dbcf;
+    --hero-sand: #e2d8cc;
 
     background-color: var(--hero-sand);
-    background-image: linear-gradient(to bottom, var(--aw-color-bg-page), var(--hero-sand) 35%);
+    background-image: linear-gradient(to bottom, var(--aw-color-bg-page) 93px, var(--hero-sand) 35%);
   }
 
   /* The artwork is pinned to the viewport, so the page slides over it as you

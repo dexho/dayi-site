@@ -13,10 +13,9 @@ description: '[Search-engine description, roughly 155 characters: what the compa
 hero:
   # badge: '[Preclinical stage]'
   title: 'Breakthrough therapies <br> with RNA science'
-  subtitle: 'Selective, reversible, and personalized:<br>A new type of medicine to transform the lives of people with genetic disorders.<br><br>'
-  actions:
-    - { text: Our platform, href: /platform, variant: primary, icon: 'tabler:arrow-right' }
-    - { text: Get in touch, href: '/careers#contact' }
+  subtitle: 'Selective, reversible, and personalized:<br>A new type of medicine to transform the lives of people with genetic disorders.'
+  # Button near the bottom of the hero that scrolls down to the next section.
+  scrollCue: 'Our platform'
   # Optional hero image. Drop a file in src/assets/images/ and uncomment:
   # image: { src: '~/assets/images/hero.jpg', alt: '[Describe the image]' }
 
@@ -24,26 +23,17 @@ hero:
   # Any wide landscape image works — roughly 3:1 reads best, and the exact
   # resolution doesn't matter. After swapping the file, match `--hero-sand`
   # in src/pages/index.astro to the new artwork's sky colour.
-  backdrop: { src: '~/assets/images/prototype_background.png', alt: '' }
+  backdrop: { src: '~/assets/images/AdobeStock_562963511 [Converted].png', alt: '' }
 
-highlights:
-  tagline: '[Why it matters]'
-  title: '[Impacts to Highlight]'
-  items:
-    - title: '[First differentiator]'
-      description: '[One or two sentences. Concrete beats sweeping — a modality, a target class, a measured result.]'
-      icon: 'tabler:dna-2'
-    - title: '[Second differentiator]'
-      description: '[One or two sentences.]'
-      icon: 'tabler:microscope'
-    - title: '[Third differentiator]'
-      description: '[One or two sentences.]'
-      icon: 'tabler:chart-dots'
+# Mission statement, centred in its own band right below the hero.
+mission:
+  tagline: 'Our mission'
+  text: 'We develop therapies for genetic diseases that carry a lifelong burden and have no effective treatment options today.'
 
 approach:
   # tagline: '[Our approach]'
   title: 'Cutting-edge Genomics & AI '
-  content: '[A short paragraph setting up the checklist below. This is the place to say what problem the field has been stuck on and what the company does about it.]'
+  content: 'Our AI-powered platform combines human genomics with computational modeling to discover and validate therapeutic targets that conventional approaches miss.'
   items:
     - title: '[Step or principle]'
       description: '[What it means in practice.]'
@@ -61,6 +51,3 @@ cta:
     - { text: Contact us, href: '/careers#contact', variant: primary }
 ---
 
-[Optional closing prose. Anything written here appears above the final call to
-action as ordinary text — good for a short note on the company's stage, its
-funding, or a recent publication. Delete this paragraph to leave the section out.]

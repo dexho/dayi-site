@@ -76,6 +76,8 @@ const hero = z.object({
   /** Full-bleed illustration behind the hero, aligned to its bottom edge. */
   backdrop: image.optional(),
   actions: z.array(action).default([]),
+  /** Label for a button at the hero's bottom edge that scrolls down to the next section. */
+  scrollCue: z.string().optional(),
 });
 
 const cta = z.object({
@@ -145,8 +147,14 @@ const page = <T extends z.ZodRawShape>(file: string, shape: T) =>
 /** Landing page. The markdown body, if any, is prose above the closing CTA. */
 const home = page('home.md', {
   hero,
-  /** Three or four short selling points. */
-  highlights: section({ items: z.array(item).default([]) }).optional(),
+  /** One-sentence mission statement, centred in its own band right below the hero. */
+  mission: z
+    .object({
+      /** Small all-caps label above the statement. */
+      tagline: z.string().optional(),
+      text: z.string(),
+    })
+    .optional(),
   /** Text-and-image block: `content` is the paragraph, `items` the checklist. */
   approach: section({
     content: z.string().optional(),
