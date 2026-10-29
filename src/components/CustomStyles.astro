@@ -15,9 +15,18 @@
     --aw-font-serif: var(--font-inter);
     --aw-font-heading: var(--font-inter);
 
-    /* [REPLACE] with the company's brand colours. */
+    /* Dayi brand colours, taken from the logo (src/assets/favicons/favicon.svg).
+       Use these everywhere the brand colours appear — in CSS as
+       var(--brand-navy) etc., in markup as Tailwind classes (text-brand-navy,
+       bg-brand-red, stroke-brand-gray, …). They stay the same in dark mode.
+       The logo SVG itself can't read CSS variables, so if a value changes here,
+       change it in favicon.svg too. */
+    --brand-navy: #1c3664; /* Dayi navy — outlines, the hero arrow, envelope */
+    --brand-red: #d4285b; /* Dayi red — highlighted dots, the logo's sun */
+    --brand-gray: #a5a4a4; /* Dayi gray — the logo's frame */
+
     --aw-color-primary: rgb(100 147 232); /* blue — buttons, links, icons */
-    --aw-color-secondary: rgb(28 54 100); /* darker blue — hover states */
+    --aw-color-secondary: var(--brand-navy); /* hover states */
     --aw-color-accent: rgb(30 58 95); /* deep navy — occasional emphasis */
 
     --aw-color-text-heading: rgb(15 23 32);

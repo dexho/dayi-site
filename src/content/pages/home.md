@@ -12,7 +12,7 @@ description: '[Search-engine description, roughly 155 characters: what the compa
 
 hero:
   # badge: '[Preclinical stage]'
-  title: 'RNA Regulatory Biology <br> to Precision Medicines'
+  title: 'RNA Regulatory Biology <br> for Precision Medicine'
   subtitle: "Selective, reversible, and personalized:<br>A new story for genetic disorders."
   # Wavy arrow near the bottom of the hero scrolls down to the next section;
   # this is its label for screen readers.
@@ -29,22 +29,24 @@ hero:
 # Headline above the mission and platform statements.
 headline: 'Target Endogenous Gene Expression and Transform RNA Regulatory Biology into Medicines'
 
-# Mission and platform statements, right below the hero, beside a grid of
-# circles. They fade in one after the other.
+# Mission and platform statements, right below the hero, under a grid of
+# circles. One per screen as you scroll. **Bold** marks the key words;
+# <br> starts a new line.
 mission:
-  tagline: 'Mission'
-  text: 'Many disorders are caused by insufficient gene expression, yet the therapeutic landscape of RNA regulation remains underexplored. We aim to bring new mechanisms of RNA regulatory biology into a scalable engine for drug discovery and development.'
+  tagline: 'Our Mission'
+  text: 'Many disorders are caused by **insufficient gene expression**, yet the therapeutic landscape of **RNA regulation** remains **underexplored**.<br><br>We aim to bring new mechanisms of RNA regulatory biology into a **scalable engine** for **drug discovery and development**.'
 
 # Shown under the mission. The button sits centred below the text and fades in last.
 platform:
-  tagline: 'Platform'
-  text: 'Our AI-driven platform systematically identifies RNA-mediated checkpoints that control gene expression. These regulatory nodes can be targeted with clinically validated therapeutic modalities like antisense oligonucleotides (ASOs), unlocking endogenous gene expression in patients to restore healthy protein levels.'
+  tagline: 'Our Science'
+  text: 'We developed an **AI&#8209;driven platform** to systematically identify **RNA&#8209;mediated checkpoints** of gene expression.<br><br>These can be targeted with **clinically validated** therapeutic modalities like antisense oligonucleotides (ASOs), unlocking endogenous gene expression in patients to **restore healthy protein levels**.'
   action: { text: Learn more, href: /platform }
 
+# Third section of the scroll story, with a red envelope graphic: `title`
+# is the small heading, `subtitle` the text below it. The email button, phone
+# and address under it come from src/content/site.md.
 cta:
-  title: "Let's work together"
+  title: "Contact us"
   subtitle: 'Get in touch to explore partnership opportunities with us.'
-  actions:
-    - { text: Contact us, href: '/contact', variant: primary }
 ---
 

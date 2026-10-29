@@ -4,7 +4,6 @@ import Layout from '~/layouts/PageLayout.astro';
 import Hero from '~/components/widgets/Hero.astro';
 import Content from '~/components/widgets/Content.astro';
 import Stats from '~/components/widgets/Stats.astro';
-import CallToAction from '~/components/widgets/CallToAction.astro';
 import StructuredData from '~/components/common/StructuredData.astro';
 import Image from '~/components/common/Image.astro';
 import Prose from '~/components/ui/Prose.astro';
@@ -20,6 +19,11 @@ import favIconSvg from '~/assets/favicons/favicon.svg';
 // All copy lives in src/content/pages/home.md — nothing on this page is hardcoded.
 const page = await getContent('home');
 const { title, description, hero, mission, platform, approach, stats, cta } = page.data;
+// The closing call to action is the story's third step, worded like the others.
+const contact = cta && { tagline: cta.title, text: cta.subtitle ?? '', action: undefined };
+// Email, phone and address for the contact step come from src/content/site.md.
+const site = await getContent('site');
+const { email, phone, address } = site.data.contact;
 // Hero backdrop (set in home.md as `hero.backdrop`). Resolved here so the srcset
 // fits whatever artwork is dropped in: variants wider than the file itself would
 // only upscale it, so the file's own width caps the list. Nothing wider than 2560px
@@ -52,6 +56,7 @@ const structuredData = [
   <StructuredData slot="head" schema={structuredData} />
 
   <Hero
+    id="top"
     fullHeight
     badge={hero.badge}
     tagline={await mdInline(hero.tagline)}
@@ -137,54 +142,85 @@ const structuredData = [
        surface instead of behind it. -->
   <div class="relative isolate bg-page">
     {
-      // Mission and platform, one row each. Each row has a small 3 × 3 grid of
-      // circles in the left third (mission: outlines with a few red dashed ones;
-      // platform: just the middle circle, solid red), its top level with the
-      // row's heading, and the statement in the other two thirds, left-aligned.
-      // The platform button sits under the platform statement. On phones each grid sits above its text. The pieces
-      // fade in one after another once the section scrolls into view (see
-      // .statement-seq below). The section keeps the #mission id: it is where
-      // the hero's arrow scrolls to.
-      (mission || platform) && (
-        <section id="mission" class="statement flex items-center justify-center px-4 sm:px-6">
-          <div class="statement-seq intersect intersect-once intersect-quarter flex w-full max-w-5xl flex-col gap-14 py-20 md:gap-16 md:py-32">
-            {[
-              // Highlighted circles per grid, as "column,row" (both counted from 0,
-              // top left). `mark` sets how they're drawn: 'filled' (solid red) or
-              // 'dashed' (red dashed outline, no fill). `onlyMarked` leaves the
-              // other circles out, so only the highlighted ones show.
-              { band: mission, marked: ['1,0', '0,1', '2,2'], mark: 'dashed', onlyMarked: false },
-              { band: platform, marked: ['1,1'], mark: 'filled', onlyMarked: true },
-            ].map(
-              async ({ band, marked, mark, onlyMarked }, i) =>
-                band && (
-                  <div class="grid items-start gap-6 md:grid-cols-3 md:gap-16">
-                    <svg
-                      class="seq-item mx-auto w-full max-w-[6rem] md:max-w-[8rem]"
-                      style={`--seq-delay: ${i * 300}ms`}
-                      viewBox="0 0 120 120"
-                      fill="none"
-                      aria-hidden="true"
-                    >
-                      {Array.from({ length: 9 }, (_, n) => {
-                        const col = n % 3;
-                        const row = Math.floor(n / 3);
-                        const isMarked = marked.includes(`${col},${row}`);
-                        if (onlyMarked && !isMarked) return null;
-                        return (
-                          <circle
-                            cx={20 + col * 40}
-                            cy={20 + row * 40}
-                            r="16"
-                            pathLength="100"
-                            class={isMarked ? `dot dot-${mark}` : 'dot'}
-                          />
-                        );
-                      })}
-                    </svg>
+      // Mission, platform and contact as a scroll story. Each statement fills the
+      // window and the page snaps from one to the next (see the scroll-snap rules
+      // below). The graphic stays pinned (sticky) and changes as each statement
+      // reaches the middle of the window: it drops in as a 3 × 3 grid for the
+      // mission, folds into the single red dot for the platform, then shrinks away
+      // for the contact step, which has its own red envelope above its heading.
+      // The graphic is pinned near the top centre, and each step's text starts
+      // just below it (the step's top padding matches the graphic's offset plus
+      // its height). Headers are centred; the paragraphs are left-aligned. The first
+      // step keeps the #mission id: it is where the hero's arrow scrolls to.
+      (mission || platform || contact) && (
+        <story-steps class="story block overflow-x-clip px-4 sm:px-6" data-step="before">
+          <div class="mx-auto w-full max-w-5xl">
+            <div class="story-visual pointer-events-none sticky top-[calc(93px+4dvh)] z-10 -mb-32 flex h-32 items-center justify-center md:top-[calc(93px+14dvh)] md:-mb-36 md:h-36">
+              <svg class="w-full max-w-[6rem] md:max-w-[8rem]" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+                {Array.from({ length: 9 }, (_, n) => {
+                  const col = n % 3;
+                  const row = Math.floor(n / 3);
+                  const key = `${col},${row}`;
+                  // Red dashed circles in the mission grid, as "column,row" from the top left.
+                  const dashed = ['1,0', '0,1', '2,2'].includes(key);
+                  const center = key === '1,1';
+                  return (
+                    <circle
+                      cx={20 + col * 40}
+                      cy={20 + row * 40}
+                      r="16"
+                      pathLength="100"
+                      class:list={['dot', dashed && 'dot-dashed', center && 'dot-center']}
+                      style={`--dx: ${(1 - col) * 40}px; --dy: ${(1 - row) * 40}px; --i: ${n}`}
+                    />
+                  );
+                })}
+              </svg>
+            </div>
 
-                    <div class="md:col-span-2">
-                      <div class="seq-item" style={`--seq-delay: ${i * 300}ms`}>
+            <div>
+              {[
+                { band: mission, id: 'mission' },
+                { band: platform, id: 'platform' },
+                { band: contact, id: 'contact' },
+              ].map(
+                async ({ band, id }) =>
+                  band && (
+                    <div
+                      id={id}
+                      data-step={id}
+                      class:list={[
+                        'story-step flex flex-col items-center pb-12 text-center md:pb-16',
+                        // The contact step fills what the footer leaves of the window,
+                        // so its snap point is the bottom of the page: the last scroll
+                        // shows the contact step and the footer together. --footer-h
+                        // is measured by the script below.
+                        id === 'contact'
+                          ? 'story-tint min-h-[calc(100dvh-93px-var(--footer-h,0px))] md:!pb-8'
+                          : 'min-h-[calc(100dvh-93px)]',
+                        // The steps after the mission sit a little higher (the graphic
+                        // lifts with them, see .story-visual svg below).
+                        id === 'mission'
+                          ? 'pt-[calc(4dvh+9.5rem)] md:pt-[calc(14dvh+11rem)]'
+                          : id === 'platform'
+                            ? 'pt-[calc(1dvh+9.5rem)] md:pt-[calc(8dvh+11rem)]'
+                            : 'pt-[calc(1dvh+3rem)] md:pt-[calc(8dvh+3.5rem)]',
+                      ]}
+                    >
+                      {id === 'contact' && (
+                        // Red envelope above the contact heading, part of the step itself
+                        // (not the pinned graphic) so it always moves with the text.
+                        <svg
+                          class="story-text story-mail mb-6 w-11"
+                          viewBox="40 46 40 29"
+                          fill="none"
+                          aria-hidden="true"
+                        >
+                          <rect x="42" y="48" width="36" height="25" rx="2" />
+                          <path d="M42.5 49.5 L60 62 L77.5 49.5" />
+                        </svg>
+                      )}
+                      <div class="story-text">
                         {band.tagline && (
                           <h2
                             class="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-primary md:mb-4 md:text-lg dark:text-blue-200"
@@ -192,21 +228,53 @@ const structuredData = [
                           />
                         )}
                         <p
-                          class="max-w-lg text-base md:text-lg font-normal leading-normal text-default dark:text-slate-200"
+                          class="story-copy mx-auto max-w-xl text-left text-lg md:text-xl font-normal leading-relaxed text-default dark:text-slate-200"
                           set:html={await mdInline(band.text)}
                         />
                       </div>
                       {band.action && (
-                        <div class="seq-item mt-10" style="--seq-delay: 650ms">
+                        <div class="story-text story-text-late mt-10">
                           <Button variant="primary" {...band.action} class="text-lg" />
                         </div>
                       )}
+                      {id === 'contact' && (
+                        <div class="story-text story-text-late mt-8 flex flex-col items-center">
+                          <Button variant="primary" href={`mailto:${email}`} text={email} icon="tabler:mail" class="text-lg" />
+                          {(phone || address) && (
+                            <dl class="mt-8 grid gap-6 text-center text-sm sm:grid-cols-2 sm:gap-16">
+                              {phone && (
+                                <div>
+                                  <dt class="font-semibold uppercase tracking-wide text-heading">Phone</dt>
+                                  <dd class="mt-1 text-muted">
+                                    <a class="hover:text-primary hover:underline" href={`tel:${phone.replace(/[^+\d]/g, '')}`}>
+                                      {phone}
+                                    </a>
+                                  </dd>
+                                </div>
+                              )}
+                              {address && (
+                                <div>
+                                  <dt class="font-semibold uppercase tracking-wide text-heading">Address</dt>
+                                  <dd class="mt-1 text-muted">
+                                    {address
+                                      .trim()
+                                      .split('\n')
+                                      .map((line) => (
+                                        <span class="block">{line}</span>
+                                      ))}
+                                  </dd>
+                                </div>
+                              )}
+                            </dl>
+                          )}
+                        </div>
+                      )}
                     </div>
-                  </div>
-                )
-            )}
+                  )
+              )}
+            </div>
           </div>
-        </section>
+        </story-steps>
       )
     }
 
@@ -242,7 +310,6 @@ const structuredData = [
       )
     }
 
-    {cta && <CallToAction title={await mdInline(cta.title)} subtitle={await md(cta.subtitle)} actions={cta.actions} />}
   </div>
 </Layout>
 
@@ -305,7 +372,8 @@ const structuredData = [
       this.tailStart = Math.max(0, frame.getBoundingClientRect().top - box.top);
       this.height = box.height;
       const surfaceTop = target.getBoundingClientRect().top + sy;
-      const scrollTarget = surfaceTop - (parseFloat(getComputedStyle(target).scrollMarginTop) || 0);
+      const scrollTarget =
+        surfaceTop - (parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0);
       const headAtRest = box.bottom + sy;
       this.end = Math.max(1, Math.min(surfaceTop - headAtRest, scrollTarget));
     }
@@ -345,6 +413,69 @@ const structuredData = [
   }
 
   if (!customElements.get('cue-sweep')) customElements.define('cue-sweep', CueSweep);
+
+  // Scroll story for mission and platform: whichever step crosses the middle of
+  // the window becomes the active one, and its name goes on the element as
+  // data-step, which the CSS uses to change the circle graphic and show that
+  // step's text. Above the first step the state is "before" (graphic lifted
+  // away), so it drops in as the mission arrives; below the last it is "after"
+  // (graphic faded out).
+  class StorySteps extends HTMLElement {
+    private steps: HTMLElement[] = [];
+    private raf = 0;
+
+    connectedCallback() {
+      this.steps = [...this.querySelectorAll<HTMLElement>('[data-step]')];
+      if (!this.steps.length) return;
+      window.addEventListener('scroll', this.onScroll, { passive: true });
+      window.addEventListener('resize', this.onScroll);
+      this.update();
+      this.toggleAttribute('data-ready', true);
+    }
+
+    disconnectedCallback() {
+      window.removeEventListener('scroll', this.onScroll);
+      window.removeEventListener('resize', this.onScroll);
+      cancelAnimationFrame(this.raf);
+      document.documentElement.style.removeProperty('--footer-h');
+    }
+
+    private onScroll = () => {
+      cancelAnimationFrame(this.raf);
+      this.raf = requestAnimationFrame(() => this.update());
+    };
+
+    // The active step changes as soon as a scroll starts towards the next one,
+    // so the pinned graphic is gone before the outgoing text slides under it:
+    // going down, a step takes over once its top is SWITCH px into the window;
+    // going up, the previous step takes over once the current one has dropped
+    // SWITCH px below where it snaps. The first step is the exception: it only
+    // starts once it reaches the middle of the window, so the grid's drop-in
+    // plays in view. Once the last step is pushed well up past where it snaps
+    // (the footer coming into view), the story is over and the graphic fades.
+    private lastY = window.scrollY;
+
+    private update() {
+      const footer = document.querySelector('footer');
+      if (footer) document.documentElement.style.setProperty('--footer-h', `${footer.offsetHeight}px`);
+      const middle = window.innerHeight / 2;
+      const snapTop = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+      const SWITCH = 40;
+      const down = window.scrollY >= this.lastY;
+      this.lastY = window.scrollY;
+      let active: HTMLElement | undefined;
+      this.steps.forEach((step, i) => {
+        const line = i === 0 ? middle : down ? window.innerHeight - SWITCH : snapTop + SWITCH;
+        if (step.getBoundingClientRect().top <= line) active = step;
+      });
+      const last = this.steps.at(-1)!;
+      let state = active?.dataset.step ?? 'before';
+      if (active === last && last.getBoundingClientRect().top < snapTop - 80) state = 'after';
+      if (this.dataset.step !== state) this.dataset.step = state;
+    }
+  }
+
+  if (!customElements.get('story-steps')) customElements.define('story-steps', StorySteps);
 </script>
 
 <style>
@@ -358,13 +489,13 @@ const structuredData = [
     display: block;
     overflow: visible;
   }
-  /* Navy line (same colour as the hero's divider dash in Hero.astro). The flowing
+  /* Brand navy line (same colour as the hero's divider dash in Hero.astro). The flowing
      segment is a brighter blue, so it reads as a glint travelling down. */
   .scroll-cue {
     display: block;
     width: fit-content;
     margin: -240px auto 0;
-    --cue-color: #173765;
+    --cue-color: var(--brand-navy);
     transition: opacity 0.2s;
   }
   .scroll-cue:hover,
@@ -399,44 +530,167 @@ const structuredData = [
     }
   }
 
-  /* The hero's scroll cue jumps here; land below the sticky header (93px). */
-  .statement {
-    min-height: 30dvh;
-  }
-  /* Staged fade-in for the mission/platform section. The container is watched
-     by the site's scroll observer (the bare `intersect` class), which removes
-     its `no-intersect` attribute once it is in view; each .seq-item then fades up
-     after its own --seq-delay. */
-  @media (prefers-reduced-motion: no-preference) {
-    .statement-seq .seq-item {
-      opacity: 0;
-    }
-    .statement-seq:not([no-intersect]) .seq-item {
-      animation: fadeInUp 0.6s ease-out both;
-      animation-delay: var(--seq-delay, 0ms);
-    }
-  }
-
   /* Circle grid beside the mission: navy outlines like the hero arrow, a few
      dots filled in the hero sun's red. */
   .dot {
-    stroke: #173765;
+    stroke: var(--brand-navy);
     stroke-width: 1.5;
-  }
-  .dot-filled {
-    fill: #d4265c;
-    stroke: #d4265c;
   }
   /* pathLength="100" on each circle makes this ten even dashes all the way round. */
   .dot-dashed {
-    stroke: #d4265c;
+    stroke: var(--brand-red);
     stroke-dasharray: 6 4;
   }
-  :global(.dark) .dot:not(.dot-filled, .dot-dashed) {
+  :global(.dark) .dot:not(.dot-dashed),
+  :global(.dark) .story-mail {
     stroke: var(--color-slate-400);
   }
-  #mission {
-    scroll-margin-top: 93px;
+
+  /* Page-wide scroll snapping, only while this page is shown: each scroll lands
+     on the hero or a story step. The padding keeps
+     snapped content clear of the sticky header (93px). Steps taller than the
+     window still scroll freely inside. */
+  :global(html:has(story-steps)) {
+    scroll-snap-type: y mandatory;
+    scroll-padding-top: 93px;
+  }
+  :global(#top),
+  .story-step {
+    scroll-snap-align: start;
+  }
+  /* The very bottom too, so a footer taller than the space left under the call
+     to action can still be scrolled into view. */
+  :global(html:has(story-steps) footer) {
+    scroll-snap-align: end;
+  }
+
+  /* Circle graphic states (data-step on <story-steps>). Every circle scales and
+     moves around its own centre; --dx/--dy point it at the middle circle. */
+  .dot {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition:
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.5s ease,
+      fill 0.4s ease,
+      stroke 0.4s ease;
+    transition-delay: calc(var(--i) * 40ms);
+  }
+  /* Before the mission: lifted above and hidden, ready to drop in. */
+  story-steps[data-ready][data-step='before'] .dot {
+    opacity: 0;
+    transform: translateY(-60px);
+  }
+  /* Past the last step (scrolled on to the footer): the graphic fades away, but
+     the contact text stays, as it is still in view. */
+  story-steps[data-step='after'] .story-visual {
+    opacity: 0;
+  }
+  .story-visual {
+    transition: opacity 0.4s ease;
+  }
+  /* The platform step sits higher than the mission (its top padding is smaller
+     by the same amount), so the graphic rises with it. */
+  .story-visual svg {
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  story-steps:is([data-step='platform'], [data-step='contact']) .story-visual svg {
+    transform: translateY(-3dvh);
+  }
+  @media (min-width: 768px) {
+    story-steps:is([data-step='platform'], [data-step='contact']) .story-visual svg {
+      transform: translateY(-6dvh);
+    }
+  }
+  /* Platform: the grid folds into the middle circle, which turns solid red. */
+  story-steps[data-step='platform'] .dot:not(.dot-center) {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0.2);
+    /* Leaving is quick, so the grid clears before the text scrolls under it. */
+    transition:
+      transform 0.3s ease-in,
+      opacity 0.2s ease-in;
+  }
+  story-steps[data-step='platform'] .dot.dot-center {
+    fill: var(--brand-red);
+    stroke: var(--brand-red);
+    transition-delay: 250ms;
+  }
+
+  /* Contact: every circle, the red dot too, shrinks away into the middle; the
+     step's own envelope (above its heading) takes over. */
+  story-steps[data-step='contact'] .dot {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0);
+    transition:
+      transform 0.3s ease-in,
+      opacity 0.2s ease-in;
+  }
+  /* Contact gets the same light blue tint the old call-to-action band had,
+     across the full width of the window (the step itself sits in the centred
+     column; `overflow-x: clip` on the story keeps the wide fill from causing
+     sideways scroll without breaking the sticky graphic). */
+  .story-tint {
+    position: relative;
+  }
+  .story-tint::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
+    z-index: -1;
+    background: color-mix(in srgb, var(--aw-color-primary) 5%, transparent);
+  }
+  :global(.dark) .story-tint::before {
+    background: none;
+  }
+  .story-mail {
+    stroke: var(--brand-navy);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Each step's text shows while its step is active. Without the script (no
+     data-ready) everything simply stays visible. */
+  /* Outgoing text fades quickly; incoming text eases in a beat later. */
+  .story-text {
+    transition:
+      opacity 0.2s ease-in,
+      transform 0.2s ease-in;
+  }
+  story-steps[data-ready] .story-step .story-text {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  story-steps[data-ready][data-step='mission'] [data-step='mission'] .story-text,
+  story-steps[data-ready][data-step='platform'] [data-step='platform'] .story-text,
+  story-steps[data-ready][data-step='contact'] [data-step='contact'] .story-text,
+  story-steps[data-ready][data-step='after'] [data-step='contact'] .story-text {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.6s ease var(--in-delay, 0.15s),
+      transform 0.6s ease var(--in-delay, 0.15s);
+  }
+  /* Key words (**bold** in home.md) stand out in the heading colour. */
+  .story-copy :global(strong) {
+    font-weight: 600;
+    color: var(--aw-color-text-heading);
+  }
+  /* Buttons and details come in a little after the text (not on the way out). */
+  .story-text-late {
+    --in-delay: 0.45s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dot,
+    .story-visual svg,
+    .story-text {
+      transition: none;
+    }
   }
 
   /* The artwork's own sky doubles as the section's fill, so the area behind the
