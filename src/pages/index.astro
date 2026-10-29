@@ -155,7 +155,7 @@ const structuredData = [
       (mission || platform || contact) && (
         <story-steps class="story block overflow-x-clip px-4 sm:px-6" data-step="before">
           <div class="mx-auto w-full max-w-5xl">
-            <div class="story-visual pointer-events-none sticky top-[calc(93px+4dvh)] z-10 -mb-32 flex h-32 items-center justify-center md:top-[calc(93px+14dvh)] md:-mb-36 md:h-36">
+            <div class="story-visual pointer-events-none sticky top-[calc(93px+4svh)] z-10 -mb-32 flex h-32 items-center justify-center md:top-[calc(93px+14svh)] md:-mb-36 md:h-36">
               <svg class="w-full max-w-[6rem] md:max-w-[8rem]" viewBox="0 0 120 120" fill="none" aria-hidden="true">
                 {Array.from({ length: 9 }, (_, n) => {
                   const col = n % 3;
@@ -196,15 +196,15 @@ const structuredData = [
                         // shows the contact step and the footer together. --footer-h
                         // is measured by the script below.
                         id === 'contact'
-                          ? 'story-tint min-h-[calc(100dvh-93px-var(--footer-h,0px))] md:!pb-8'
-                          : 'min-h-[calc(100dvh-93px)]',
+                          ? 'story-tint min-h-[calc(100svh-93px-var(--footer-h,0px))] md:!pb-8'
+                          : 'min-h-[calc(100svh-93px)]',
                         // The steps after the mission sit a little higher (the graphic
                         // lifts with them, see .story-visual svg below).
                         id === 'mission'
-                          ? 'pt-[calc(4dvh+9.5rem)] md:pt-[calc(14dvh+11rem)]'
+                          ? 'pt-[calc(4svh+9.5rem)] md:pt-[calc(14svh+11rem)]'
                           : id === 'platform'
-                            ? 'pt-[calc(1dvh+9.5rem)] md:pt-[calc(8dvh+11rem)]'
-                            : 'pt-[calc(1dvh+3rem)] md:pt-[calc(8dvh+3.5rem)]',
+                            ? 'pt-[calc(1svh+9.5rem)] md:pt-[calc(8svh+11rem)]'
+                            : 'pt-[calc(1svh+3rem)] md:pt-[calc(8svh+3.5rem)]',
                       ]}
                     >
                       {id === 'contact' && (
@@ -228,7 +228,12 @@ const structuredData = [
                           />
                         )}
                         <p
-                          class="story-copy mx-auto max-w-xl text-left text-lg md:text-xl font-normal leading-relaxed text-default dark:text-slate-200"
+                          class:list={[
+                            'story-copy mx-auto max-w-xl text-lg md:text-xl font-normal leading-relaxed text-default dark:text-slate-200',
+                            // Mission and platform read as paragraphs (left-aligned); the
+                            // short contact line is centred like its heading.
+                            id === 'contact' ? 'text-center' : 'text-left',
+                          ]}
                           set:html={await mdInline(band.text)}
                         />
                       </div>
@@ -428,17 +433,30 @@ const structuredData = [
       this.steps = [...this.querySelectorAll<HTMLElement>('[data-step]')];
       if (!this.steps.length) return;
       window.addEventListener('scroll', this.onScroll, { passive: true });
-      window.addEventListener('resize', this.onScroll);
+      window.addEventListener('resize', this.onResize);
+      this.measure();
       this.update();
       this.toggleAttribute('data-ready', true);
     }
 
     disconnectedCallback() {
       window.removeEventListener('scroll', this.onScroll);
-      window.removeEventListener('resize', this.onScroll);
+      window.removeEventListener('resize', this.onResize);
       cancelAnimationFrame(this.raf);
       document.documentElement.style.removeProperty('--footer-h');
     }
+
+    // The contact step fills what the footer leaves of the window, so it needs
+    // the footer's height; that only changes on resize, not while scrolling.
+    private measure() {
+      const footer = document.querySelector('footer');
+      if (footer) document.documentElement.style.setProperty('--footer-h', `${footer.offsetHeight}px`);
+    }
+
+    private onResize = () => {
+      this.measure();
+      this.onScroll();
+    };
 
     private onScroll = () => {
       cancelAnimationFrame(this.raf);
@@ -456,8 +474,6 @@ const structuredData = [
     private lastY = window.scrollY;
 
     private update() {
-      const footer = document.querySelector('footer');
-      if (footer) document.documentElement.style.setProperty('--footer-h', `${footer.offsetHeight}px`);
       const middle = window.innerHeight / 2;
       const snapTop = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
       const SWITCH = 40;
@@ -564,7 +580,11 @@ const structuredData = [
     scroll-snap-align: end;
   }
 
-  /* Circle graphic states (data-step on <story-steps>). Every circle scales and
+  /* The story is sized in svh (the window height with the phone's browser bars
+     showing), not dvh: dvh changes as the bars slide in and out while
+     scrolling, which would resize the steps mid-scroll and fight the snapping.
+
+     Circle graphic states (data-step on <story-steps>). Every circle scales and
      moves around its own centre; --dx/--dy point it at the middle circle. */
   .dot {
     transform-box: fill-box;
@@ -594,12 +614,12 @@ const structuredData = [
   .story-visual svg {
     transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  story-steps:is([data-step='platform'], [data-step='contact']) .story-visual svg {
-    transform: translateY(-3dvh);
+  story-steps:is([data-step='platform'], [data-step='contact'], [data-step='after']) .story-visual svg {
+    transform: translateY(-3svh);
   }
   @media (min-width: 768px) {
-    story-steps:is([data-step='platform'], [data-step='contact']) .story-visual svg {
-      transform: translateY(-6dvh);
+    story-steps:is([data-step='platform'], [data-step='contact'], [data-step='after']) .story-visual svg {
+      transform: translateY(-6svh);
     }
   }
   /* Platform: the grid folds into the middle circle, which turns solid red. */
@@ -619,7 +639,7 @@ const structuredData = [
 
   /* Contact: every circle, the red dot too, shrinks away into the middle; the
      step's own envelope (above its heading) takes over. */
-  story-steps[data-step='contact'] .dot {
+  story-steps:is([data-step='contact'], [data-step='after']) .dot {
     opacity: 0;
     transform: translate(var(--dx), var(--dy)) scale(0);
     transition:
