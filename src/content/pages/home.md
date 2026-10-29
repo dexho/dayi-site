@@ -12,8 +12,8 @@ description: '[Search-engine description, roughly 155 characters: what the compa
 
 hero:
   # badge: '[Preclinical stage]'
-  title: 'RNA Regulatory Biology <br> to New Medicines'
-  subtitle: "We're targeting endogenous gene expression:<br>A new story for genetic disorders."
+  title: 'RNA Regulatory Biology <br> to Precision Medicines'
+  subtitle: "Selective, reversible, and personalized:<br>A new story for genetic disorders."
   # Wavy arrow near the bottom of the hero scrolls down to the next section;
   # this is its label for screen readers.
   scrollCue: 'Our platform'
@@ -32,13 +32,13 @@ headline: 'Target Endogenous Gene Expression and Transform RNA Regulatory Biolog
 # Mission and platform statements, right below the hero, beside a grid of
 # circles. They fade in one after the other.
 mission:
-  tagline: 'A new class of genetic medicines'
-  text: 'At a molecular level, many disorders are caused by insufficient gene expression. We aim to modulate actionable RNA regulatory mechanisms to restore healthy protein levels. Leveraging clinically validated therapeutic modalities such as antisense oligonucleotides (ASOs), we translate discoveries in RNA biology into precision medicines.'
+  tagline: 'Mission'
+  text: 'Many disorders are caused by insufficient gene expression, yet the therapeutic landscape of RNA regulation remains underexplored. We aim to bring new mechanisms of RNA regulatory biology into a scalable engine for drug discovery and development.'
 
 # Shown under the mission. The button sits centred below the text and fades in last.
 platform:
   tagline: 'Platform'
-  text: 'Cutting-edge genomics + AI modeling reveals therapeutic targets that past approaches have missed.'
+  text: 'Our AI-driven platform systematically identifies RNA-mediated checkpoints that control gene expression. These regulatory nodes can be targeted with clinically validated therapeutic modalities like antisense oligonucleotides (ASOs), unlocking endogenous gene expression in patients to restore healthy protein levels.'
   action: { text: Learn more, href: /platform }
 
 cta:
