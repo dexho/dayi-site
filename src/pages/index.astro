@@ -236,8 +236,9 @@ const structuredData = [
                         {band.tagline && (
                           <h2
                             class="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-primary md:mb-4 md:text-lg dark:text-blue-200"
-                            set:html={await mdInline(band.tagline)}
-                          />
+                          >
+                            <span class="story-highlight" set:html={await mdInline(band.tagline)} />
+                          </h2>
                         )}
                         <p
                           class:list={[
@@ -245,8 +246,9 @@ const structuredData = [
                             // Every step's text reads as a left-aligned paragraph.
                             'text-left',
                           ]}
-                          set:html={await mdInline(band.text)}
-                        />
+                        >
+                          <span class="story-highlight" set:html={await mdInline(band.text)} />
+                        </p>
                       </div>
                       {band.action && (
                         <div class="story-text story-text-late mt-10">
@@ -671,6 +673,15 @@ const structuredData = [
   /* The button is filled with the page colour so the art doesn't show through. */
   .story-tint :global(.btn-primary) {
     background-color: var(--aw-color-bg-page);
+  }
+  /* Contact text sits on a page-coloured highlight, line by line, so the
+     mountain art doesn't run through the words. */
+  .story-tint .story-highlight {
+    background-color: var(--aw-color-bg-page);
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    padding: 0.1em 0.3em;
+    margin: 0 -0.3em;
   }
   .story-mail {
     stroke: var(--brand-red);

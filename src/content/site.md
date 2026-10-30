@@ -4,8 +4,6 @@
 #
 # These appear on every page. Field reference: src/content.config.ts
 # Editing guide: CONTENT.md
-#
-# Everything marked [PLACEHOLDER] or pointing at example.com needs replacing.
 # ---------------------------------------------------------------------------
 
 nav:
@@ -23,22 +21,18 @@ footer:
         - { text: Platform, href: /platform }
         - { text: Team, href: /team }
         - { text: Contact, href: /contact }
+        - { text: Privacy, href: /privacy }
     - title: Contact
       links:
-        - { text: general@example.com, href: 'mailto:general@example.com' }
-  # Small print links (privacy policy, terms). Empty until those pages exist.
+        - { text: info@dayitx.com, href: 'mailto:info@dayitx.com' }
+  # Small print links next to the company name (terms etc.).
   secondaryLinks: []
   socials:
-    - { icon: 'tabler:brand-linkedin', href: 'https://www.linkedin.com/company/example', ariaLabel: LinkedIn }
-    - { icon: 'tabler:brand-x', href: 'https://x.com/example', ariaLabel: X }
+    - { icon: 'tabler:brand-linkedin', href: 'https://www.linkedin.com/company/dayitx', ariaLabel: LinkedIn }
+    - { icon: 'tabler:brand-x', href: 'https://x.com/dayitx', ariaLabel: X }
   note: '© 2026 Dayi Therapeutics. All rights reserved.'
 
 # Used by the contact page and by every "email us" button.
 contact:
-  email: general@example.com
-  phone: '[+1 (555) 000-0000]'
-  address: |
-    [Building / Suite]
-    [Street address]
-    [City, State ZIP]
+  email: info@dayitx.com
 ---

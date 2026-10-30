@@ -8,7 +8,7 @@
 # ---------------------------------------------------------------------------
 
 title: Platform
-description: '[Search-engine description of the technology, roughly 155 characters.]'
+description: 'How Dayi Therapeutics combines genomics and computation to find RNA processing mechanisms that control gene expression.'
 
 # hero:
 #   # badge: '[Technology]'

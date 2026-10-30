@@ -3,12 +3,11 @@
 # Landing page (/)
 #
 # Field reference: src/content.config.ts · Editing guide: CONTENT.md
-# Every [PLACEHOLDER] below is meant to be replaced.
 # Any text field accepts markdown: **bold**, *italic*, [links](/platform).
 # ---------------------------------------------------------------------------
 
 title: 'Dayi Therapeutics'
-description: '[Search-engine description, roughly 155 characters: what the company does, for which diseases, at what stage.]'
+description: 'Dayi Therapeutics develops medicines that increase endogenous gene expression by targeting RNA regulatory mechanisms, without gene editing.'
 
 hero:
   # badge: '[Preclinical stage]'
@@ -34,12 +33,12 @@ headline: 'Target Endogenous Gene Expression and Transform RNA Regulatory Biolog
 # <br> starts a new line.
 mission:
   tagline: 'Our Mission'
-  text: 'Many disorders are caused by **insufficient gene expression**, yet the therapeutic landscape of **RNA regulation** remains **underexplored**.<br><br>We aim to bring RNA regulatory biology into a **scalable engine** for **drug discovery** to deliver **safer**, more **precise**, and broadly applicable treatments for **unmet medical needs**.'
+  text: 'Many disorders are caused by **insufficient gene expression**, yet the therapeutic landscape of **RNA regulation** remains **underexplored**.<br><br>Bringing RNA regulatory biology into a **scalable engine** for **drug discovery** will deliver **safer**, more **precise**, and broadly applicable treatments for **unmet medical needs**.'
 
 # Shown under the mission. The button sits centred below the text and fades in last.
 platform:
   tagline: 'Our Science'
-  text: 'We are developing medicines that **increase endogenous gene expression**: turning up a **patient’s own genes** to restore what the body is lacking, <i>without</i> the need for gene editing. <br><br>Our **AI&#8209;driven platform** systematically identifies **RNA processing mechanisms** that control gene expression, and targets them with **clinically validated** therapeutic modalities.'
+  text: 'We aim to **increase endogenous gene expression**. These medicines turn up a **patient’s own genes** to restore what the body is lacking, <i>without</i> the need for gene editing. <br><br>Our **proprietary platform** systematically identifies **RNA processing mechanisms** that control gene expression, and targets them with **clinically validated** therapeutic modalities.'
   action: { text: Learn more, href: /platform }
 
 # Third section of the scroll story, with an envelope graphic: `title`
