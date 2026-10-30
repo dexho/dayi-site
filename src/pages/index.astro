@@ -14,16 +14,14 @@ import { getContent, hasBodyContent } from '~/utils/content';
 import { findImage } from '~/utils/images';
 import { md, mdInline, mdItems } from '~/utils/markdown';
 import { render } from 'astro:content';
+import contactBackdrop from '~/assets/images/AdobeStock_562963511 [Converted]-2.png';
 import favIconSvg from '~/assets/favicons/favicon.svg';
 
 // All copy lives in src/content/pages/home.md — nothing on this page is hardcoded.
 const page = await getContent('home');
 const { title, description, hero, mission, platform, approach, stats, cta } = page.data;
 // The closing call to action is the story's third step, worded like the others.
-const contact = cta && { tagline: cta.title, text: cta.subtitle ?? '', action: undefined };
-// Email, phone and address for the contact step come from src/content/site.md.
-const site = await getContent('site');
-const { email, phone, address } = site.data.contact;
+const contact = cta && { tagline: cta.title, text: cta.subtitle ?? '', action: cta.actions[0] };
 // Hero backdrop (set in home.md as `hero.backdrop`). Resolved here so the srcset
 // fits whatever artwork is dropped in: variants wider than the file itself would
 // only upscale it, so the file's own width caps the list. Nothing wider than 2560px
@@ -203,10 +201,24 @@ const structuredData = [
                         id === 'mission'
                           ? 'pt-[calc(4svh+9.5rem)] md:pt-[calc(14svh+11rem)]'
                           : id === 'platform'
-                            ? 'pt-[calc(1svh+9.5rem)] md:pt-[calc(8svh+11rem)]'
+                            ? 'pt-[calc(1svh+7.5rem)] md:pt-[calc(8svh+9rem)]'
                             : 'pt-[calc(1svh+3rem)] md:pt-[calc(8svh+3.5rem)]',
                       ]}
                     >
+                      {id === 'contact' && (
+                        // Mountain line art over the tint, full width along the bottom.
+                        <Image
+                          src={contactBackdrop}
+                          alt=""
+                          class="story-tint-art"
+                          widths={[800, 1280, 1920, 2560]}
+                          width={2560}
+                          sizes="100vw"
+                          format="webp"
+                          layout="none"
+                          loading="lazy"
+                        />
+                      )}
                       {id === 'contact' && (
                         // Red envelope above the contact heading, part of the step itself
                         // (not the pinned graphic) so it always moves with the text.
@@ -230,9 +242,8 @@ const structuredData = [
                         <p
                           class:list={[
                             'story-copy mx-auto max-w-xl text-lg md:text-xl font-normal leading-relaxed text-default dark:text-slate-200',
-                            // Mission and platform read as paragraphs (left-aligned); the
-                            // short contact line is centred like its heading.
-                            id === 'contact' ? 'text-center' : 'text-left',
+                            // Every step's text reads as a left-aligned paragraph.
+                            'text-left',
                           ]}
                           set:html={await mdInline(band.text)}
                         />
@@ -240,38 +251,6 @@ const structuredData = [
                       {band.action && (
                         <div class="story-text story-text-late mt-10">
                           <Button variant="primary" {...band.action} class="text-lg" />
-                        </div>
-                      )}
-                      {id === 'contact' && (
-                        <div class="story-text story-text-late mt-8 flex flex-col items-center">
-                          <Button variant="primary" href={`mailto:${email}`} text={email} icon="tabler:mail" class="text-lg" />
-                          {(phone || address) && (
-                            <dl class="mt-8 grid gap-6 text-center text-sm sm:grid-cols-2 sm:gap-16">
-                              {phone && (
-                                <div>
-                                  <dt class="font-semibold uppercase tracking-wide text-heading">Phone</dt>
-                                  <dd class="mt-1 text-muted">
-                                    <a class="hover:text-primary hover:underline" href={`tel:${phone.replace(/[^+\d]/g, '')}`}>
-                                      {phone}
-                                    </a>
-                                  </dd>
-                                </div>
-                              )}
-                              {address && (
-                                <div>
-                                  <dt class="font-semibold uppercase tracking-wide text-heading">Address</dt>
-                                  <dd class="mt-1 text-muted">
-                                    {address
-                                      .trim()
-                                      .split('\n')
-                                      .map((line) => (
-                                        <span class="block">{line}</span>
-                                      ))}
-                                  </dd>
-                                </div>
-                              )}
-                            </dl>
-                          )}
                         </div>
                       )}
                     </div>
@@ -295,7 +274,7 @@ const structuredData = [
           image={approach.image}
         >
           <Fragment slot="bg">
-            <div class="absolute inset-0 bg-primary/5 dark:bg-transparent" />
+            <div class="absolute inset-0 bg-tint dark:bg-transparent" />
           </Fragment>
         </Content>
       )
@@ -434,9 +413,21 @@ const structuredData = [
       if (!this.steps.length) return;
       window.addEventListener('scroll', this.onScroll, { passive: true });
       window.addEventListener('resize', this.onResize);
+      // On load (and on refresh, where the browser restores the old scroll
+      // position a moment later) the graphic and text jump straight to the
+      // right step instead of animating there from the top.
+      this.toggleAttribute('data-settling', true);
       this.measure();
       this.update();
       this.toggleAttribute('data-ready', true);
+      const settle = () => {
+        this.update();
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => this.toggleAttribute('data-settling', false))
+        );
+      };
+      if (document.readyState === 'complete') requestAnimationFrame(settle);
+      else window.addEventListener('load', () => requestAnimationFrame(settle), { once: true });
     }
 
     disconnectedCallback() {
@@ -637,8 +628,7 @@ const structuredData = [
     transition-delay: 250ms;
   }
 
-  /* Contact: every circle, the red dot too, shrinks away into the middle; the
-     step's own envelope (above its heading) takes over. */
+  /* Contact: the other circles shrink away into the middle. */
   story-steps:is([data-step='contact'], [data-step='after']) .dot {
     opacity: 0;
     transform: translate(var(--dx), var(--dy)) scale(0);
@@ -646,28 +636,44 @@ const structuredData = [
       transform 0.3s ease-in,
       opacity 0.2s ease-in;
   }
-  /* Contact gets the same light blue tint the old call-to-action band had,
-     across the full width of the window (the step itself sits in the centred
-     column; `overflow-x: clip` on the story keeps the wide fill from causing
-     sideways scroll without breaking the sticky graphic). */
+  /* The red dot sits where the envelope appears: it empties to a red outline,
+     then fades out as the envelope fades in with the step's text. */
+  story-steps:is([data-step='contact'], [data-step='after']) .dot.dot-center {
+    fill: transparent;
+    stroke: var(--brand-red);
+    opacity: 0;
+    transform: none;
+    transition:
+      fill 0.25s ease,
+      opacity 0.35s ease 0.25s;
+  }
+  /* Contact sits on the page background like the steps above it; the step is
+     positioned so the mountain art can sit along its bottom edge. */
   .story-tint {
     position: relative;
   }
-  .story-tint::before {
-    content: '';
+  .story-tint-art {
     position: absolute;
-    inset-block: 0;
-    left: 50%;
+    bottom: 0;
+    left: calc(50% - 50vw);
     width: 100vw;
-    transform: translateX(-50%);
+    max-width: none;
+    height: auto;
     z-index: -1;
-    background: color-mix(in srgb, var(--aw-color-primary) 5%, transparent);
+    pointer-events: none;
+    mix-blend-mode: luminosity;
+    filter: invert(1);
+    opacity: 0.25;
+    /* The art's top rows are empty; trimming the top 2px hides the seam some
+       browsers draw along the edge of a filtered, blended image. */
+    clip-path: inset(2px 0 0 0);
   }
-  :global(.dark) .story-tint::before {
-    background: none;
+  /* The button is filled with the page colour so the art doesn't show through. */
+  .story-tint :global(.btn-primary) {
+    background-color: var(--aw-color-bg-page);
   }
   .story-mail {
-    stroke: var(--brand-navy);
+    stroke: var(--brand-red);
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -703,6 +709,11 @@ const structuredData = [
   /* Buttons and details come in a little after the text (not on the way out). */
   .story-text-late {
     --in-delay: 0.45s;
+  }
+
+  /* While the page loads, every state is applied instantly (see the script). */
+  story-steps[data-settling] :is(.dot, .story-visual, .story-visual svg, .story-text) {
+    transition: none !important;
   }
 
   @media (prefers-reduced-motion: reduce) {

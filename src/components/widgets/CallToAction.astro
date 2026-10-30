@@ -30,7 +30,7 @@ const {
 
 <!-- Sits on the same light blue band as the contact block, unless a `bg` slot replaces it. -->
 <WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
-  {!bg && <div slot="bg" class="absolute inset-0 bg-primary/5 dark:bg-transparent" />}
+  {!bg && <div slot="bg" class="absolute inset-0 bg-tint dark:bg-transparent" />}
   <div
     class:list={[
       'text-center',

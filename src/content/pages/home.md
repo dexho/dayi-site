@@ -34,19 +34,20 @@ headline: 'Target Endogenous Gene Expression and Transform RNA Regulatory Biolog
 # <br> starts a new line.
 mission:
   tagline: 'Our Mission'
-  text: 'Many disorders are caused by **insufficient gene expression**, yet the therapeutic landscape of **RNA regulation** remains **underexplored**.<br><br>We aim to bring new mechanisms of RNA regulatory biology into a **scalable engine** for **drug discovery and development**.'
+  text: 'Many disorders are caused by **insufficient gene expression**, yet the therapeutic landscape of **RNA regulation** remains **underexplored**.<br><br>We aim to bring RNA regulatory biology into a **scalable engine** for **drug discovery** to deliver **safer**, more **precise**, and broadly applicable treatments for **unmet medical needs**.'
 
 # Shown under the mission. The button sits centred below the text and fades in last.
 platform:
   tagline: 'Our Science'
-  text: 'We developed an **AI&#8209;driven platform** to systematically identify **RNA&#8209;mediated checkpoints** of gene expression.<br><br>These can be targeted with **clinically validated** therapeutic modalities like antisense oligonucleotides (ASOs), unlocking endogenous gene expression in patients to **restore healthy protein levels**.'
+  text: 'We are developing medicines that **increase endogenous gene expression**: turning up a **patient’s own genes** to restore what the body is lacking, <i>without</i> the need for gene editing. <br><br>Our **AI&#8209;driven platform** systematically identifies **RNA processing mechanisms** that control gene expression, and targets them with **clinically validated** therapeutic modalities.'
   action: { text: Learn more, href: /platform }
 
-# Third section of the scroll story, with a red envelope graphic: `title`
-# is the small heading, `subtitle` the text below it. The email button, phone
-# and address under it come from src/content/site.md.
+# Third section of the scroll story, with an envelope graphic: `title`
+# is the small heading, `subtitle` the text below it, `actions` the button.
 cta:
-  title: "Contact us"
-  subtitle: 'Get in touch to explore partnership opportunities with us.'
+  title: "Work with us"
+  subtitle: "Rooted at **Columbia University** and led by **experts in RNA biology**, Dayi is redefining what is treatable."
+  actions:
+    - { text: Get in touch, href: /contact }
 ---
 

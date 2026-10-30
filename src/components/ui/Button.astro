@@ -25,11 +25,6 @@ const variants = {
 {
   type === 'button' || type === 'submit' || type === 'reset' ? (
     <button type={type} class={twMerge(variants[variant] || '', className)} {...rest}>
-      {variant !== 'link' && (
-        <svg class="btn-glint" aria-hidden="true">
-          <rect pathLength="100" />
-        </svg>
-      )}
       <Fragment set:html={text} />
       {icon && <Icon name={icon} class="w-5 h-5 inline-block rtl:-scale-x-100" />}
     </button>
@@ -39,11 +34,6 @@ const variants = {
       {...(target ? { target: target, rel: 'noopener noreferrer' } : {})}
       {...rest}
     >
-      {variant !== 'link' && (
-        <svg class="btn-glint" aria-hidden="true">
-          <rect pathLength="100" />
-        </svg>
-      )}
       <Fragment set:html={text} />
       {icon && <Icon name={icon} class="w-5 h-5 inline-block rtl:-scale-x-100" />}
     </a>
