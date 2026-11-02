@@ -9,7 +9,7 @@
 nav:
   links:
     - { text: Platform, href: /platform }
-    - { text: Team, href: /team }
+    # - { text: Team, href: /team }  # hidden for now; uncomment to bring back
     - { text: Contact, href: /contact }
   # Header buttons. Add e.g. { text: Contact us, href: '/contact', variant: primary }
   actions: []
@@ -19,7 +19,7 @@ footer:
     - title: Company
       links:
         - { text: Platform, href: /platform }
-        - { text: Team, href: /team }
+        # - { text: Team, href: /team }  # hidden for now
         - { text: Contact, href: /contact }
         - { text: Privacy, href: /privacy }
     - title: Contact

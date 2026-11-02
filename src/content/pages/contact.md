@@ -1,16 +1,10 @@
 ---
-# ---------------------------------------------------------------------------
-# Contact page (/contact)
-#
-# The email address comes from src/content/site.md, so they only need editing in one place.
-#
-# Field reference: src/content.config.ts · Editing guide: CONTENT.md
-# ---------------------------------------------------------------------------
-
+# Browser tab and search results (not shown on the page). The email address comes from src/content/site.md.
 title: Contact
-description: 'Get in touch with Dayi Therapeutics about partnerships, investment or careers.'
+description: 'Get in touch with Dayi Therapeutics about research partnerships, investment, or joining our team.'
 
+# Shown on the page.
 contact:
   title: 'Get in touch'
-  subtitle: 'We’d love to hear from you about partnerships, investment or careers.'
+  subtitle: 'Whether you’re exploring a research pilot, considering partnering with us, or interested in joining our team, we’d love to hear from you. Send us a note and we’ll be in touch.'
 ---

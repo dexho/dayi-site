@@ -1,11 +1,9 @@
 ---
+import { Icon } from 'astro-icon/components';
 import Layout from '~/layouts/PageLayout.astro';
 
-import Hero from '~/components/widgets/Hero.astro';
-import Features2 from '~/components/widgets/Features2.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
-import Prose from '~/components/ui/Prose.astro';
 
 import { getContent, hasBodyContent } from '~/utils/content';
 import { md, mdInline, mdItems } from '~/utils/markdown';
@@ -13,41 +11,61 @@ import { render } from 'astro:content';
 
 // All copy lives in src/content/pages/platform.md.
 const page = await getContent('platform');
-const { title, description, hero, pillars, process, details, cta } = page.data;
+const { title, description, hero, pillars, process, cta } = page.data;
 const { Content: Body } = await render(page);
 const hasBody = hasBodyContent(page.body);
 ---
 
 <Layout metadata={{ title, description }}>
-  {
-    hero && (
-      <Hero
-        badge={hero.badge}
-        tagline={await mdInline(hero.tagline)}
-        title={await mdInline(hero.title)}
-        subtitle={await md(hero.subtitle)}
-        actions={hero.actions}
-        image={hero.image}
-      />
-    )
-  }
-
-  {
-    pillars && (
-      <Features2
-        id="pillars"
-        columns={3}
-        tagline={await mdInline(pillars.tagline)}
-        title={await mdInline(pillars.title)}
-        subtitle={await md(pillars.subtitle)}
-        items={await mdItems(pillars.items)}
-      >
-        <Fragment slot="bg">
-          <div class="absolute inset-0 bg-tint dark:bg-transparent" />
-        </Fragment>
-      </Features2>
-    )
-  }
+  <!-- Intro, the pillar cards and the closing line share one column, as wide as the
+       landing page's text boxes. The title is centred in the contact page's "Get in
+       touch" heading style; the text is left-aligned. Cards stack and fade in one
+       after another. -->
+  <section class="relative not-prose">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-20">
+      <div class="mx-auto max-w-xl text-left">
+      {
+        hero?.title && (
+          <h1
+            class="mb-6 text-center font-bold leading-tighter tracking-tighter font-heading text-heading text-3xl md:text-4xl text-balance intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+            set:html={await mdInline(hero.title)}
+          />
+        )
+      }
+      {
+        hero?.subtitle && (
+          <div
+            class="text-base md:text-lg font-medium leading-relaxed text-default dark:text-slate-200 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+            set:html={await md(hero.subtitle)}
+          />
+        )
+      }
+      {
+        pillars && pillars.items.length > 0 && (
+          <div class="mt-12 grid gap-4 md:gap-6">
+            {(await mdItems(pillars.items)).map(({ title: itemTitle, description, icon }, i) => (
+              <div
+                class="relative flex flex-col border border-black dark:border-slate-600 p-6 intersect-once intersect-quarter intersect-no-queue motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+                style={`animation-delay: ${i * 200}ms`}
+              >
+                {icon && <Icon name={icon} class="mb-4 w-8 h-8 self-center text-primary" />}
+                <h3 class="text-xl font-bold" set:html={itemTitle} />
+                {description && <p class="text-muted mt-2" set:html={description} />}
+              </div>
+            ))}
+          </div>
+        )
+      }
+      {
+        hasBody && (
+          <div class="mt-12 prose prose-lg dark:prose-invert intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+            <Body />
+          </div>
+        )
+      }
+      </div>
+    </div>
+  </section>
 
   {
     process && (
@@ -59,19 +77,6 @@ const hasBody = hasBodyContent(page.body);
         items={await mdItems(process.items)}
         image={process.image}
       />
-    )
-  }
-
-  {
-    hasBody && (
-      <Prose
-        id="details"
-        tagline={await mdInline(details?.tagline)}
-        title={await mdInline(details?.title)}
-        subtitle={await md(details?.subtitle)}
-      >
-        <Body />
-      </Prose>
     )
   }
 

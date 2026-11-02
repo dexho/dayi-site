@@ -10,36 +10,24 @@
 title: Platform
 description: 'How Dayi Therapeutics combines genomics and computation to find RNA processing mechanisms that control gene expression.'
 
-# hero:
-#   # badge: '[Technology]'
-#   title: 'Genomics x AI'
-#   subtitle: '[Two or three sentences for a scientifically literate reader: the modality, the biology it acts on, and why the approach is tractable now.]<br><br>'
-#   # actions:
-#   #   - { text: See the science, href: '#details', variant: primary }
+hero:
+  title: 'Our Science'
+  subtitle: 'Dayi Therapeutics combines genomics, RNA biology, and clinical expertise to develop transformative  medicines for serious neurologiocal diseases. Our platform is built on four integrated pillars:'
 
 pillars:
-  # tagline: '[Platform]'
-  title: 'Genomics x AI'
-  # subtitle: '[One line framing the cards below.]'
   items:
-    - title: '[Component or capability]'
-      description: '[Two sentences on what it is and what it enables.]'
-      icon: 'tabler:atom-2'
-    - title: '[Component or capability]'
-      description: '[Two sentences.]'
-      icon: 'tabler:flask'
-    - title: '[Component or capability]'
-      description: '[Two sentences.]'
-      icon: 'tabler:cpu'
-    - title: '[Component or capability]'
-      description: '[Two sentences.]'
-      icon: 'tabler:target-arrow'
-    - title: '[Component or capability]'
-      description: '[Two sentences.]'
-      icon: 'tabler:chart-histogram'
-    - title: '[Component or capability]'
-      description: '[Two sentences.]'
-      icon: 'tabler:shield-check'
+    - title: 'Computational Biology & Genomics'
+      description: 'Human genetics and multi-omics data uncover disease-driving targets.'
+      icon: 'tabler:dna-2'
+    - title: 'RNA Biology'
+      description: 'Mechanistic understanding of RNA regulation reveals therapeutic opportunities.'
+      icon: 'tabler:microscope'
+    - title: 'Validated ASO Therapeutics'
+      description: 'Proven RNA medicines translate biological insights into precision therapies.'
+      icon: 'tabler:pill'
+    - title: 'CNS Clinical Expertise'
+      description: 'Deep disease knowledge guides translational and clinical development.'
+      icon: 'tabler:brain'
 
 # details:
 #   title: '[The science in more detail]'
@@ -51,6 +39,7 @@ pillars:
 #   actions:
 #     - { text: Request more information, href: '/contact', variant: primary }
 ---
+
 
 <!-- ## [Section heading — e.g. the biological problem]
 
