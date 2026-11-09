@@ -24,6 +24,10 @@ export interface Props {
 }
 
 const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme = 'light' } = Astro.props;
+
+// PDFs open in a new tab.
+const newTab = (href?: string) =>
+  href?.toLowerCase().endsWith('.pdf') ? { target: '_blank', rel: 'noopener noreferrer' } : {};
 ---
 
 <footer class:list={[{ dark: theme === 'dark' }, 'relative border-t border-gray-200 dark:border-slate-800 not-prose']}>
@@ -45,6 +49,7 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme 
                 <a
                   class="text-muted hover:text-gray-700 dark:text-gray-400 hover:underline transition duration-150 ease-in-out"
                   href={href}
+                  {...newTab(href)}
                   set:html={text}
                 />
               </>
@@ -63,6 +68,7 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme 
                     <a
                       class="text-muted hover:text-gray-700 hover:underline dark:text-gray-400 transition duration-150 ease-in-out"
                       href={href}
+                      {...newTab(href)}
                       aria-label={ariaLabel}
                     >
                       <Fragment set:html={text} />

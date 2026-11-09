@@ -19,8 +19,13 @@ const { metadata } = Astro.props;
 const site = await getContent('site');
 const { nav, footer } = site.data;
 
+// PDFs in src/assets/pdfs are bundled at build time. A link in site.md can point
+// at one with href 'assets/pdfs/<file name>.pdf'.
+const pdfs = import.meta.glob<string>('/src/assets/pdfs/*.pdf', { query: '?url', import: 'default', eager: true });
+const resolveHref = (href: string) => pdfs[`/src/${href}`] ?? getPermalink(href);
+
 const withPermalink = <T extends { href: string }>(entries: T[]) =>
-  entries.map((entry) => ({ ...entry, href: getPermalink(entry.href) }));
+  entries.map((entry) => ({ ...entry, href: resolveHref(entry.href) }));
 ---
 
 <Layout metadata={metadata}>

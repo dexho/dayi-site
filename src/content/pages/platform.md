@@ -12,7 +12,7 @@ description: 'How Dayi Therapeutics combines genomics and computation to find RN
 
 hero:
   title: 'Our Science'
-  subtitle: 'Dayi Therapeutics combines genomics, RNA biology, and clinical expertise to develop transformative  medicines for serious neurologiocal diseases. Our platform is built on four integrated pillars:'
+  subtitle: 'Dayi Therapeutics combines genomics, RNA biology, and clinical expertise to develop new medicines for serious neurologiocal diseases. Our platform is built on four integrated pillars:'
 
 pillars:
   items:

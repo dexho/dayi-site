@@ -21,7 +21,7 @@ footer:
         - { text: Platform, href: /platform }
         # - { text: Team, href: /team }  # hidden for now
         - { text: Contact, href: /contact }
-        - { text: Privacy, href: /privacy }
+        - { text: Financial Conflict of Interest Policy, href: 'assets/pdfs/Financial Conflict of Interest Policy_DAYI Therapeutics, Inc.pdf' }
     - title: Contact
       links:
         - { text: info@dayitx.com, href: 'mailto:info@dayitx.com' }

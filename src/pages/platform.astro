@@ -17,9 +17,10 @@ const hasBody = hasBodyContent(page.body);
 ---
 
 <Layout metadata={{ title, description }}>
-  <!-- Intro, the pillar cards and the closing line share one column, as wide as the
-       landing page's text boxes. The title is centred in the contact page's "Get in
-       touch" heading style; the text is left-aligned. Cards stack and fade in one
+  <!-- Intro and the closing line share one column, as wide as the landing page's text
+       boxes; the pillar cards extend past it on each side (4rem on md; on lg+ 204px, which makes each card 480px). The title is
+       centred in the contact page's "Get in touch" heading style; the text is
+       left-aligned. Cards sit in a 2x2 grid (stacked on phones) and fade in one
        after another. -->
   <section class="relative not-prose">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-20">
@@ -42,13 +43,13 @@ const hasBody = hasBodyContent(page.body);
       }
       {
         pillars && pillars.items.length > 0 && (
-          <div class="mt-12 grid gap-4 md:gap-6">
+          <div class="mt-12 grid sm:grid-cols-2 gap-4 md:gap-6 md:-mx-16 lg:-mx-[204px]">
             {(await mdItems(pillars.items)).map(({ title: itemTitle, description, icon }, i) => (
               <div
                 class="relative flex flex-col border border-black dark:border-slate-600 p-6 intersect-once intersect-quarter intersect-no-queue motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
                 style={`animation-delay: ${i * 200}ms`}
               >
-                {icon && <Icon name={icon} class="mb-4 w-8 h-8 self-center text-primary" />}
+                {icon && <Icon name={icon} class="mb-4 w-10 h-10 self-center text-primary" />}
                 <h3 class="text-xl font-bold" set:html={itemTitle} />
                 {description && <p class="text-muted mt-2" set:html={description} />}
               </div>
