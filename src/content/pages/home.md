@@ -33,7 +33,7 @@ headline: 'Target Endogenous Gene Expression and Transform RNA Regulatory Biolog
 # <br> starts a new line.
 mission:
   tagline: 'Our Mission'
-  text: 'For many diseases, increasing expression of specific therapeutic genes may provide **substantial clinical benefit**, yet RNA-mediated gene upregulation remains an **underexplored therapeutic frontier**.'
+  text: 'For many diseases, increasing expression of specific therapeutic genes may provide **substantial clinical benefit**, yet RNA-mediated gene upregulation remains an **underexplored therapeutic frontier**. <br><br>Bringing RNA regulatory biology into a **scalable engine** for **drug discovery** will deliver **safer**, more **precise**, and broadly applicable treatments for **unmet medical needs**.'
 
 # Shown under the mission. The button sits centred below the text and fades in last.
 platform:
